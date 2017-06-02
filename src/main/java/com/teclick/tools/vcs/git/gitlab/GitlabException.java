@@ -6,6 +6,10 @@ package com.teclick.tools.vcs.git.gitlab;
  */
 public class GitlabException extends Exception {
 
+    public GitlabException(String message) {
+        super(message);
+    }
+
     public GitlabException(String message, Throwable cause) {
         super(message, cause);
     }

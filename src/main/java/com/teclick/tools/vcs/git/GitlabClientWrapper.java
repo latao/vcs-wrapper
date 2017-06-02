@@ -152,6 +152,8 @@ public class GitlabClientWrapper implements VCS {
             if ((null != namespaces) && (namespaces.size() == 1)) {
                 Namespace namespace = namespaces.get(0);
                 gitlabApiClient.createProject(projectName, namespace.getId(), "Create project by dev central", false);
+            } else {
+                throw new GitlabException("Group name not found");
             }
         } catch (GitlabException e) {
             throw new VCSException("importToVcs:searchNamespace", e);
