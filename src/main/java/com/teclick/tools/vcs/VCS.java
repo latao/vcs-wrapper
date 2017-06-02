@@ -63,7 +63,7 @@ public interface VCS {
      * @param branch 分支名称
      * @throws VCSException 当发生异常统一转换成成这个异常
      */
-    void importToSVN(String groupName, File folder, String projectName, String branch) throws VCSException;
+    void importToVcs(String groupName, File folder, String projectName, String branch) throws VCSException;
 
     /**
      * 从现有分支创建一个分支

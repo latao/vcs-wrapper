@@ -4,6 +4,7 @@ import com.teclick.tools.vcs.*;
 import com.teclick.tools.vcs.git.gitlab.*;
 import com.teclick.tools.vcs.git.gitlab.entity.Branch;
 import com.teclick.tools.vcs.git.gitlab.entity.Commit;
+import com.teclick.tools.vcs.git.gitlab.entity.Namespace;
 import com.teclick.tools.vcs.git.gitlab.entity.Project;
 import com.teclick.tools.vcs.utils.Zip;
 
@@ -17,22 +18,19 @@ import java.util.*;
 
 /**
  * Created by Nelson on 2017-05-24.
- * GitClientWrapper
+ * GitlabClientWrapper
  */
-public class GitClientWrapper implements VCS {
-
-    //private String gitRoot;
+public class GitlabClientWrapper implements VCS {
 
     private GitlabApiClient gitlabApiClient;
 
     private VCSContext context;
 
-    public GitClientWrapper(VCSContext context) throws VCSException {
+    public GitlabClientWrapper(VCSContext context) throws VCSException {
         try {
-            //this.gitRoot = context.getRootPath();
             this.gitlabApiClient = new GitlabApiClient(context.getRootPath(), context.getAccount(), context.getPassword(), 10000);
         } catch (GitlabException e) {
-            throw new VCSException("GitClientWrapper", e);
+            throw new VCSException("GitlabClientWrapper", e);
         }
         this.context = context;
     }
@@ -148,8 +146,16 @@ public class GitClientWrapper implements VCS {
     }
 
     @Override
-    public void importToSVN(String groupName, File folder, String projectName, String branch) throws VCSException {
-
+    public void importToVcs(String groupName, File folder, String projectName, String branch) throws VCSException {
+        try {
+            List<Namespace> namespaces = gitlabApiClient.searchNamespace(groupName);
+            if ((null != namespaces) && (namespaces.size() == 1)) {
+                Namespace namespace = namespaces.get(0);
+                gitlabApiClient.createProject(projectName, namespace.getId(), "Create project by dev central", false);
+            }
+        } catch (GitlabException e) {
+            throw new VCSException("importToVcs:searchNamespace", e);
+        }
     }
 
     @Override

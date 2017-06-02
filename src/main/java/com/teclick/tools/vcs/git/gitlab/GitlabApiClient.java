@@ -2,10 +2,7 @@ package com.teclick.tools.vcs.git.gitlab;
 
 import com.fasterxml.jackson.databind.DeserializationFeature;
 import com.fasterxml.jackson.jaxrs.json.JacksonJsonProvider;
-import com.teclick.tools.vcs.git.gitlab.entity.Branch;
-import com.teclick.tools.vcs.git.gitlab.entity.Commit;
-import com.teclick.tools.vcs.git.gitlab.entity.Project;
-import com.teclick.tools.vcs.git.gitlab.entity.Session;
+import com.teclick.tools.vcs.git.gitlab.entity.*;
 import org.apache.cxf.interceptor.LoggingInInterceptor;
 import org.apache.cxf.interceptor.LoggingOutInterceptor;
 import org.apache.cxf.jaxrs.client.JAXRSClientFactory;
@@ -104,6 +101,24 @@ public class GitlabApiClient implements GitlabApi {
             return gitlabApi.getRepositoryArchive(projectId, sha);
         } catch (WebApplicationException e) {
             throw new GitlabException("getRepositoryArchive", e);
+        }
+    }
+
+    @Override
+    public List<Namespace> searchNamespace(String groupName) throws GitlabException {
+        try {
+            return gitlabApi.searchNamespace(groupName);
+        } catch (WebApplicationException e) {
+            throw new GitlabException("searchNamespace", e);
+        }
+    }
+
+    @Override
+    public Project createProject(String projectName, int namespaceId, String description, boolean isPublic) throws GitlabException {
+        try {
+            return gitlabApi.createProject(projectName, namespaceId, description, isPublic);
+        } catch (WebApplicationException e) {
+            throw new GitlabException("searchNamespace", e);
         }
     }
 

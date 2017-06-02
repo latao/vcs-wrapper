@@ -1,6 +1,7 @@
 package com.teclick.tools.vcs;
 
-import com.teclick.tools.vcs.git.GitClientWrapper;
+import com.teclick.tools.vcs.git.BitbucketClientWrapper;
+import com.teclick.tools.vcs.git.GitlabClientWrapper;
 import com.teclick.tools.vcs.svn.SVNClientWrapper;
 
 /**
@@ -9,7 +10,7 @@ import com.teclick.tools.vcs.svn.SVNClientWrapper;
  */
 public class VCSFactory {
 
-    public enum VCSType {none, git, svn}
+    public enum VCSType {none, git_lab, git_bit_bucket, svn}
 
     public static VCSType valueOf(String key) {
         for (VCSType v : VCSType.values()) {
@@ -23,14 +24,15 @@ public class VCSFactory {
     public static VCS newInstance(VCSType vcsType, VCSContext context) throws VCSException {
 
         switch (vcsType) {
-            case git: {
-                return new GitClientWrapper(context);
+            case git_lab: {
+                return new GitlabClientWrapper(context);
             }
-
             case svn: {
                 return new SVNClientWrapper(context);
             }
-
+            case git_bit_bucket: {
+                return new BitbucketClientWrapper(context);
+            }
             default: {
                 return null;
             }

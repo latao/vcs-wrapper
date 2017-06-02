@@ -1,9 +1,6 @@
 package com.teclick.tools.vcs.git.gitlab;
 
-import com.teclick.tools.vcs.git.gitlab.entity.Branch;
-import com.teclick.tools.vcs.git.gitlab.entity.Commit;
-import com.teclick.tools.vcs.git.gitlab.entity.Project;
-import com.teclick.tools.vcs.git.gitlab.entity.Session;
+import com.teclick.tools.vcs.git.gitlab.entity.*;
 
 import javax.ws.rs.*;
 import javax.ws.rs.core.MediaType;
@@ -45,5 +42,14 @@ public interface GitlabApi {
     @GET
     @Path("projects/{projectId}/repository/archive.zip")
     Response getRepositoryArchive(@PathParam("projectId") int projectId, @QueryParam("sha") String sha) throws GitlabException;
+
+    @GET
+    @Path("namespaces")
+    List<Namespace> searchNamespace(@QueryParam("search") String groupName) throws GitlabException;
+
+    @POST
+    @Path("projects")
+    Project createProject(@QueryParam("name") String projectName, @QueryParam("namespace_id") int namespaceId,
+                          @QueryParam("description") String description, @QueryParam("public") boolean isPublic) throws GitlabException;
 
 }

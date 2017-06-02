@@ -15,6 +15,7 @@ public class Namespace {
     private Integer ownerId;
     private String path;
     private String updatedAt;
+    private String kind;
 
     public Date getCreatedAt() {
         return this.createdAt;
@@ -70,5 +71,13 @@ public class Namespace {
 
     public void setUpdatedAt(String updatedAt) {
         this.updatedAt = updatedAt;
+    }
+
+    public String getKind() {
+        return kind;
+    }
+
+    public void setKind(String kind) {
+        this.kind = kind;
     }
 }

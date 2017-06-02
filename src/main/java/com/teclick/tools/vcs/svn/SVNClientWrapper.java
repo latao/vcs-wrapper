@@ -179,13 +179,13 @@ public class SVNClientWrapper implements Closeable, VCS {
     }
 
     @Override
-    public void importToSVN(String groupName, File folder, String projectName, String branch) throws VCSException {
+    public void importToVcs(String groupName, File folder, String projectName, String branch) throws VCSException {
         String projectSvnRoot = getProjectSvnRoot(projectName, branch);
         try {
             SVNURL svnurl = SVNURL.parseURIEncoded(projectSvnRoot);
             svnClientManager.getCommitClient().doImport(folder, svnurl, "Project Initialize", null, true, true, SVNDepth.fromRecurse(true));
         } catch (SVNException e) {
-            throw new VCSException("importToSVN", e);
+            throw new VCSException("importToVcs", e);
         }
     }
 
