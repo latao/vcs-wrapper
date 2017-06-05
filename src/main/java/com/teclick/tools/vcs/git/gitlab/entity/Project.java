@@ -1,4 +1,3 @@
-
 package com.teclick.tools.vcs.git.gitlab.entity;
 
 import java.util.Date;
@@ -6,7 +5,7 @@ import java.util.List;
 
 /**
  * Created by Nelson on 2017-06-01 21:43.
- * GitlabApiClient
+ * Project
  */
 
 public class Project {
@@ -35,22 +34,22 @@ public class Project {
     private Boolean onlyAllowMergeIfPipelineSucceeds;
     private Boolean onlyAllowMergeIfAllDiscussionsAreResolved;
     private Integer openIssuesCount;
-//    private Owner owner;
+    //    private Owner owner;
     private String path;
     private String pathWithNamespace;
-//    private Permissions permissions;
+    //    private Permissions permissions;
     private Boolean publicJobs;
     private String repositoryStorage;
     private Boolean requestAccessEnabled;
     private String runnersToken;
     private Boolean sharedRunnersEnabled;
-//    private List<ProjectSharedGroup> sharedWithGroups;
+    //    private List<ProjectSharedGroup> sharedWithGroups;
     private Boolean snippetsEnabled;
     private String sshUrlToRepo;
     private Integer starCount;
     private List<String> tagList;
     private Integer visibilityLevel;
-//    private Visibility visibility;
+    //    private Visibility visibility;
     private Boolean wallEnabled;
     private String webUrl;
     private Boolean wikiEnabled;

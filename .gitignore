@@ -3,3 +3,4 @@
 .idea/
 target/
 vcs-wrapper.iml
+/src/main/test/com/teclick/tools/vcs/VCSFactoryTest.java

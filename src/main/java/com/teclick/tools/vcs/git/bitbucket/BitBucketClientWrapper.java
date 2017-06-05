@@ -1,25 +1,34 @@
-package com.teclick.tools.vcs.git;
+package com.teclick.tools.vcs.git.bitbucket;
 
 import com.teclick.tools.vcs.*;
+import com.teclick.tools.vcs.git.GitException;
 
 import java.io.File;
 import java.util.List;
 
 /**
  * Created by Nelson on 2017-06-02 14:38.
- * BitbucketClientWrapper
+ * BitBucketClientWrapper
  */
-public class BitbucketClientWrapper implements VCS {
+public class BitBucketClientWrapper implements VCS {
 
     private VCSContext context;
 
-    public BitbucketClientWrapper(VCSContext context) throws VCSException {
+    private BitBucketApi bitBucketApi;
 
+    public BitBucketClientWrapper(VCSContext context) throws VCSException {
+        try {
+            BitBucketApiClient bitBucketApiClient = new BitBucketApiClient(context.getRootPath(), context.getAccount(), context.getPassword(), 10000);
+            this.bitBucketApi = bitBucketApiClient.getBitBucketApi();
+        } catch (GitException e) {
+            throw new VCSException("BitBucketClientWrapper", e);
+        }
         this.context = context;
     }
 
     @Override
     public List<ProjectItem> listProjects(String groupName) throws VCSException {
+        bitBucketApi.getUserRepositories();
         return null;
     }
 
@@ -55,6 +64,6 @@ public class BitbucketClientWrapper implements VCS {
 
     @Override
     public VCSContext getContext() {
-        return null;
+        return context;
     }
 }

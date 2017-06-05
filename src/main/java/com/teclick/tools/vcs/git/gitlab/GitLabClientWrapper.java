@@ -1,7 +1,7 @@
-package com.teclick.tools.vcs.git;
+package com.teclick.tools.vcs.git.gitlab;
 
 import com.teclick.tools.vcs.*;
-import com.teclick.tools.vcs.git.gitlab.*;
+import com.teclick.tools.vcs.git.GitException;
 import com.teclick.tools.vcs.git.gitlab.entity.Branch;
 import com.teclick.tools.vcs.git.gitlab.entity.Commit;
 import com.teclick.tools.vcs.git.gitlab.entity.Namespace;
@@ -14,23 +14,28 @@ import java.io.File;
 import java.io.IOException;
 import java.io.InputStream;
 import java.text.SimpleDateFormat;
-import java.util.*;
+import java.util.ArrayList;
+import java.util.Calendar;
+import java.util.Date;
+import java.util.List;
 
 /**
  * Created by Nelson on 2017-05-24.
- * GitlabClientWrapper
+ * GitLabClientWrapper
  */
-public class GitlabClientWrapper implements VCS {
+public class GitLabClientWrapper implements VCS {
 
-    private GitlabApiClient gitlabApiClient;
+    //private GitLabApiClient gitlabApiClient;
+    private GitLabApi gitLabApi;
 
     private VCSContext context;
 
-    public GitlabClientWrapper(VCSContext context) throws VCSException {
+    public GitLabClientWrapper(VCSContext context) throws VCSException {
         try {
-            this.gitlabApiClient = new GitlabApiClient(context.getRootPath(), context.getAccount(), context.getPassword(), 10000);
-        } catch (GitlabException e) {
-            throw new VCSException("GitlabClientWrapper", e);
+            GitLabApiClient gitlabApiClient = new GitLabApiClient(context.getRootPath(), context.getAccount(), context.getPassword(), 10000);
+            this.gitLabApi = gitlabApiClient.getGitLabApi();
+        } catch (GitException e) {
+            throw new VCSException("GitLabClientWrapper", e);
         }
         this.context = context;
     }
@@ -49,7 +54,7 @@ public class GitlabClientWrapper implements VCS {
                 strBeginDate = getCommitDate(projectId, lastBuildVersion);
             }
 
-            List<Commit> commits = gitlabApiClient.getCommits(projectId, branch, null, strBeginDate, strEndDate);
+            List<Commit> commits = gitLabApi.getCommits(projectId, branch, null, strBeginDate, strEndDate);
             List<VersionCommentItem> result = new ArrayList<>(commits.size());
             for (Commit commit : commits) {
                 if (!commit.getId().equals(lastBuildVersion)) {
@@ -62,7 +67,7 @@ public class GitlabClientWrapper implements VCS {
             }
 
             return result;
-        } catch (GitlabException e) {
+        } catch (GitException e) {
             throw new VCSException("getVersionsAfterLastBuild", e);
         }
     }
@@ -70,7 +75,7 @@ public class GitlabClientWrapper implements VCS {
     @Override
     public List<ProjectItem> listProjects(String groupName) throws VCSException {
         try {
-            List<Project> projects = gitlabApiClient.getProjects();
+            List<Project> projects = gitLabApi.getProjects();
             List<ProjectItem> result = new ArrayList<>(projects.size());
             for (Project project : projects) {
                 if (project.getNamespace().getName().equals(groupName)) {
@@ -81,7 +86,7 @@ public class GitlabClientWrapper implements VCS {
                 }
             }
             return result;
-        } catch (GitlabException e) {
+        } catch (GitException e) {
             throw new VCSException("listProjects", e);
         }
     }
@@ -89,13 +94,13 @@ public class GitlabClientWrapper implements VCS {
     @Override
     public List<String> listProjectBranch(String project) throws VCSException {
         try {
-            List<Branch> branches = gitlabApiClient.getBranches(Integer.parseInt(project));
+            List<Branch> branches = gitLabApi.getBranches(Integer.parseInt(project));
             List<String> result = new ArrayList<>(branches.size());
             for (Branch branch : branches) {
                 result.add(branch.getName());
             }
             return result;
-        } catch (GitlabException e) {
+        } catch (GitException e) {
             throw new VCSException("listProjectBranch", e);
         }
     }
@@ -105,12 +110,12 @@ public class GitlabClientWrapper implements VCS {
         Response response = null;
         try {
             Integer projectId = Integer.parseInt(project);
-            response = gitlabApiClient.getRepositoryArchive(projectId, version);
+            response = gitLabApi.getRepositoryArchive(projectId, version);
             try (InputStream in = response.readEntity(InputStream.class)) {
                 Zip.unzip(in, folder, false);
                 response.close();
             }
-        } catch (GitlabException | IOException e) {
+        } catch (GitException | IOException e) {
             if (null != response) {
                 response.close();
             }
@@ -131,7 +136,7 @@ public class GitlabClientWrapper implements VCS {
 
             String strEndDate = getCommitDate(projectId, targetVersion);
 
-            List<Commit> commits = gitlabApiClient.getCommits(projectId, branch, subPath, strBeginDate, strEndDate);
+            List<Commit> commits = gitLabApi.getCommits(projectId, branch, subPath, strBeginDate, strEndDate);
 
             VersionCommentItem versionCommentItem = new VersionCommentItem();
             if ((null != commits) && (commits.size() > 0)) {
@@ -140,7 +145,7 @@ public class GitlabClientWrapper implements VCS {
                 versionCommentItem.setCommittedDate(commits.get(0).getCreated_at());
             }
             return versionCommentItem;
-        } catch (GitlabException e) {
+        } catch (GitException e) {
             throw new VCSException("getMaxVersion", e);
         }
     }
@@ -148,14 +153,14 @@ public class GitlabClientWrapper implements VCS {
     @Override
     public void importToVcs(String groupName, File folder, String projectName, String branch) throws VCSException {
         try {
-            List<Namespace> namespaces = gitlabApiClient.searchNamespace(groupName);
+            List<Namespace> namespaces = gitLabApi.searchNamespace(groupName);
             if ((null != namespaces) && (namespaces.size() == 1)) {
                 Namespace namespace = namespaces.get(0);
-                gitlabApiClient.createProject(projectName, namespace.getId(), "Create project by dev central", false);
+                gitLabApi.createProject(projectName, namespace.getId(), "Create project by dev central", false);
             } else {
-                throw new GitlabException("Group name not found");
+                throw new GitException("Group name not found");
             }
-        } catch (GitlabException e) {
+        } catch (GitException e) {
             throw new VCSException("importToVcs:searchNamespace", e);
         }
     }
@@ -179,8 +184,8 @@ public class GitlabClientWrapper implements VCS {
         return ISO8601DateFormat.format(time);
     }
 
-    private String getCommitDate(Integer projectId, String targetVersion) throws GitlabException {
-        Commit commitTargetBuild = gitlabApiClient.getCommits(projectId, targetVersion);
+    private String getCommitDate(Integer projectId, String targetVersion) throws GitException {
+        Commit commitTargetBuild = gitLabApi.getCommits(projectId, targetVersion);
         Date endDate = commitTargetBuild.getCreated_at();
         return formatDateTimeWithISO8601(endDate);
     }

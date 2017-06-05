@@ -4,7 +4,7 @@ import java.util.Date;
 
 /**
  * Created by Nelson on 2017-06-01 21:44.
- * GitlabApiClient
+ * Namespace
  */
 public class Namespace {
 

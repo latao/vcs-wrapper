@@ -166,7 +166,7 @@ public class SVNClientWrapper implements Closeable, VCS {
                 if (entry.getKind() == SVNNodeKind.DIR) {
                     String branchFullName = entry.getName();
                     String branchPreFix = project + "-";
-                    if (branchFullName.startsWith(branchPreFix)&&(branchFullName.length() > branchPreFix.length())) {
+                    if (branchFullName.startsWith(branchPreFix) && (branchFullName.length() > branchPreFix.length())) {
                         result.add(branchFullName.substring(branchPreFix.length()));
                     }
                 }

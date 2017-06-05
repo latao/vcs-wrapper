@@ -1,9 +1,8 @@
-
 package com.teclick.tools.vcs.git.gitlab.entity;
 
 /**
  * Created by Nelson on 2017-06-01 21:47.
- * GitlabApiClient
+ * Branch
  */
 public class Branch {
 

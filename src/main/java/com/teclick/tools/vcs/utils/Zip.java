@@ -54,7 +54,7 @@ public class Zip {
                         continue;
                     }
 
-                    try(FileOutputStream fos = new FileOutputStream(newFile)) {
+                    try (FileOutputStream fos = new FileOutputStream(newFile)) {
                         int len;
                         while ((len = zis.read(buffer)) > 0) {
                             fos.write(buffer, 0, len);

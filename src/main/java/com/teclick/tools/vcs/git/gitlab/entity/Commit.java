@@ -1,4 +1,3 @@
-
 package com.teclick.tools.vcs.git.gitlab.entity;
 
 import java.util.Date;
@@ -6,7 +5,7 @@ import java.util.List;
 
 /**
  * Created by Nelson on 2017-06-01 21:45.
- * GitlabApiClient
+ * Commit
  */
 public class Commit {
 

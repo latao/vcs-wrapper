@@ -1,7 +1,7 @@
 package com.teclick.tools.vcs;
 
-import com.teclick.tools.vcs.git.BitbucketClientWrapper;
-import com.teclick.tools.vcs.git.GitlabClientWrapper;
+import com.teclick.tools.vcs.git.bitbucket.BitBucketClientWrapper;
+import com.teclick.tools.vcs.git.gitlab.GitLabClientWrapper;
 import com.teclick.tools.vcs.svn.SVNClientWrapper;
 
 /**
@@ -25,19 +25,18 @@ public class VCSFactory {
 
         switch (vcsType) {
             case git_lab: {
-                return new GitlabClientWrapper(context);
+                return new GitLabClientWrapper(context);
             }
             case svn: {
                 return new SVNClientWrapper(context);
             }
             case git_bit_bucket: {
-                return new BitbucketClientWrapper(context);
+                return new BitBucketClientWrapper(context);
             }
             default: {
                 return null;
             }
         }
-
     }
 
 }

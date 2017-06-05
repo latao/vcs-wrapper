@@ -4,7 +4,7 @@ import java.util.Date;
 
 /**
  * Created by Nelson on 2017-06-01 21:41.
- * GitlabApiClient
+ * Session
  */
 public class Session {
 
@@ -19,7 +19,7 @@ public class Session {
     private Boolean darkScheme;
     private String email;
     private Integer id;
-//    private List<Identity> identities;
+    //    private List<Identity> identities;
     private Boolean is_admin;
     private String linkedin;
     private String name;
