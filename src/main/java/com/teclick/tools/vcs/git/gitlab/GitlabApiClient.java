@@ -24,7 +24,11 @@ public class GitLabApiClient extends GitClientBase {
 
     @SuppressWarnings("unchecked")
     public GitLabApiClient(String url, String account, String password, int timeoutInSecond) throws GitException {
-        super(url, account, password, timeoutInSecond, GitLabApi.class);
+        super(fixUrl(url), account, password, timeoutInSecond, GitLabApi.class);
+    }
+
+    private static String fixUrl(String url) {
+        return url + (url.endsWith("/") ? "api/v4" : "/api/v4");
     }
 
     @Override
