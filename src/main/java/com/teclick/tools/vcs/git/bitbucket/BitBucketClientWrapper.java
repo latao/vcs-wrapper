@@ -66,4 +66,39 @@ public class BitBucketClientWrapper implements VCS {
     public VCSContext getContext() {
         return context;
     }
+
+    @Override
+    public int addGroup(String name, String description) {
+        return 0;
+    }
+
+    @Override
+    public boolean groupExists(String groupName) {
+        return true;
+    }
+
+    @Override
+    public void addGroupUser(String account, String groupName, int accessLevel) throws VCSException {
+
+    }
+
+    @Override
+    public void setGroupUser(String account, String groupName, int accessLevel) throws VCSException {
+
+    }
+
+    @Override
+    public void delGroupUser(String account, String groupName) throws VCSException {
+
+    }
+
+    @Override
+    public boolean groupUserExists(String account, String group) {
+        return false;
+    }
+
+    @Override
+    public boolean userExists(String account) {
+        return false;
+    }
 }

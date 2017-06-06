@@ -10,7 +10,6 @@ import org.apache.cxf.transport.http.HTTPConduit;
 import org.apache.cxf.transports.http.configuration.HTTPClientPolicy;
 
 import java.util.ArrayList;
-import java.util.Collections;
 import java.util.List;
 
 /**

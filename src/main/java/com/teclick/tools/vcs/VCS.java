@@ -87,4 +87,52 @@ public interface VCS {
      * @return 运行环境的对象
      */
     VCSContext getContext();
+
+    /**
+     * 创建一个组
+     * @param name 组名
+     * @param description 该组的描述
+     */
+    int addGroup(String name, String description) throws VCSException;
+
+    /**
+     *
+     * @param groupName
+     */
+    boolean groupExists(String groupName);
+
+    /**
+     *
+     * @param account
+     */
+    void addGroupUser(String account, String groupName, int accessLevel) throws VCSException;
+
+    /**
+     *
+     * @param account
+     * @param groupName
+     * @param accessLevel
+     */
+    void setGroupUser(String account, String groupName, int accessLevel) throws VCSException;
+
+    /**
+     *
+     * @param account
+     * @param groupName
+     */
+    void delGroupUser(String account, String groupName) throws VCSException;
+
+    /**
+     *
+     * @param account
+     * @return
+     */
+    boolean groupUserExists(String account, String group) throws VCSException;
+
+    /**
+     *
+     * @param account
+     * @return
+     */
+    boolean userExists(String account);
 }

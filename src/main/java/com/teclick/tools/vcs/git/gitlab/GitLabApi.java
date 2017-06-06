@@ -53,4 +53,44 @@ public interface GitLabApi {
     Project createProject(@QueryParam("name") String projectName, @QueryParam("namespace_id") int namespaceId,
                           @QueryParam("description") String description, @QueryParam("public") boolean isPublic) throws GitException;
 
+    @POST
+    @Path("groups")
+    Group createGroup(@QueryParam("name") String name, @QueryParam("path") String path, @QueryParam("description") String description);
+
+    @GET
+    @Path("groups")
+    List<Group> getGroups();
+
+    @GET
+    @Path("groups")
+    List<Group> getGroups(@QueryParam("search") String groupName);
+
+    @GET
+    @Path("users")
+    List<User> getUsers();
+
+    @GET
+    @Path("users")
+    List<User> getUsers(@QueryParam("username") String userName);
+
+    @POST
+    @Path("groups/{id}/members")
+    void createGroupMember(@PathParam("id") int groupId, @QueryParam("user_id") int userId, @QueryParam("access_level") int accussLevel);
+
+    @GET
+    @Path("groups/{id}/members")
+    List<User> getGroupMembers(@PathParam("id") int groupId);
+
+    @GET
+    @Path("groups/{id}/members/{user_id}")
+    User getGroupMember(@PathParam("id") int groupId, @PathParam("user_id") int userId);
+
+    @PUT
+    @Path("groups/{id}/members/{user_id}")
+    void setGroupMembers(@PathParam("id") int groupId, @PathParam("user_id") int userId, @QueryParam("access_level") int accessLevel);
+
+    @DELETE
+    @Path("groups/{id}/members/{user_id}")
+    void delGroupMembers(@PathParam("id") int groupId, @PathParam("user_id") int userId);
+
 }

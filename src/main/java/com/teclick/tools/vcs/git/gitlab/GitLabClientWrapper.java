@@ -2,10 +2,7 @@ package com.teclick.tools.vcs.git.gitlab;
 
 import com.teclick.tools.vcs.*;
 import com.teclick.tools.vcs.git.GitException;
-import com.teclick.tools.vcs.git.gitlab.entity.Branch;
-import com.teclick.tools.vcs.git.gitlab.entity.Commit;
-import com.teclick.tools.vcs.git.gitlab.entity.Namespace;
-import com.teclick.tools.vcs.git.gitlab.entity.Project;
+import com.teclick.tools.vcs.git.gitlab.entity.*;
 import com.teclick.tools.vcs.utils.Zip;
 
 import javax.ws.rs.core.MultivaluedMap;
@@ -32,8 +29,8 @@ public class GitLabClientWrapper implements VCS {
 
     public GitLabClientWrapper(VCSContext context) throws VCSException {
         try {
-            GitLabApiClient gitlabApiClient = new GitLabApiClient(context.getRootPath(), context.getAccount(), context.getPassword(), 10000);
-            this.gitLabApi = gitlabApiClient.getGitLabApi();
+            GitLabApiClient gitLabApiClient = new GitLabApiClient(context.getRootPath(), context.getAccount(), context.getPassword(), 10000);
+            this.gitLabApi = gitLabApiClient.getGitLabApi();
         } catch (GitException e) {
             throw new VCSException("GitLabClientWrapper", e);
         }
@@ -175,6 +172,122 @@ public class GitLabClientWrapper implements VCS {
         return context;
     }
 
+
+    //=====================================================================================
+    // Group & User
+    private User getUser(String account) {
+        User result = null;
+        List<User> users = gitLabApi.getUsers(account);
+        for (User user : users) {
+            if (user.getUsername().equals(account)) {
+                result = user;
+                break;
+            }
+        }
+        return result;
+    }
+
+    private Group getGroup(String groupName) {
+        List<Group> groups = gitLabApi.getGroups(groupName);
+        Group result = null;
+        for (Group group : groups) {
+            if (group.getName().toLowerCase().equals(groupName.toLowerCase())) {
+                result = group;
+                break;
+            }
+        }
+        return result;
+    }
+
+    @Override
+    public int addGroup(String name, String description) throws VCSException {
+        try {
+            Group group = gitLabApi.createGroup(name, name, description);
+            return group.getId();
+        } catch (Exception e) {
+            throw new VCSException("addGroup", e);
+        }
+    }
+
+    @Override
+    public boolean groupExists(String groupName) {
+        return getGroup(groupName) != null;
+    }
+
+    @Override
+    public void addGroupUser(String account, String groupName, int accessLevel) throws VCSException {
+        try {
+            Group group = getGroup(groupName);
+
+            User user = getUser(account);
+
+            if ((null != group) && (null != user)) {
+                gitLabApi.createGroupMember(group.getId(), user.getId(), accessLevel);
+            } else {
+                throw new Exception("addGroupUser: Can not lookup group or user");
+            }
+        } catch (Exception e) {
+            throw new VCSException("addGroupUser", e);
+        }
+    }
+
+    @Override
+    public void setGroupUser(String account, String groupName, int accessLevel) throws VCSException {
+        try {
+            Group group = getGroup(groupName);
+            User user = getUser(account);
+            if ((null != group) && (null != user)) {
+                gitLabApi.setGroupMembers(group.getId(), user.getId(), accessLevel);
+            } else {
+                throw new Exception("addGroupUser: Can not lookup group or user");
+            }
+        } catch (Exception e) {
+            throw new VCSException("", e);
+        }
+    }
+
+    @Override
+    public void delGroupUser(String account, String groupName) throws VCSException {
+        try {
+            Group group = getGroup(groupName);
+            User user = getUser(account);
+            if ((null != group) && (null != user)) {
+                gitLabApi.delGroupMembers(group.getId(), user.getId());
+            } else {
+                throw new Exception("addGroupUser: Can not lookup group or user");
+            }
+        } catch (Exception e) {
+            throw new VCSException("", e);
+        }
+    }
+
+    @Override
+    public boolean groupUserExists(String account, String groupName) throws VCSException {
+        try {
+            Group group = getGroup(groupName);
+            User user = getUser(account);
+            if ((null != group) && (null != user)) {
+                User U = gitLabApi.getGroupMember(group.getId(), user.getId());
+                return null != U;
+            } else {
+                throw new Exception("addGroupUser: Can not lookup group or user");
+            }
+        } catch (Exception e) {
+            throw new VCSException("", e);
+        }
+    }
+
+    @Override
+    public boolean userExists(String account) {
+        List<User> users = gitLabApi.getUsers(account);
+        for (User user : users) {
+            if (user.getUsername().equals(account)) {
+                return true;
+            }
+        }
+        return false;
+    }
+
     private String formatDateTimeWithISO8601(Date date) {
         Calendar calendar = Calendar.getInstance();
         calendar.setTime(date);
@@ -190,7 +303,7 @@ public class GitLabClientWrapper implements VCS {
         return formatDateTimeWithISO8601(endDate);
     }
 
-    private String getFileName(MultivaluedMap<String, String> header) {
+/*    private String getFileName(MultivaluedMap<String, String> header) {
         String[] contentDisposition = header.getFirst("Content-Disposition").split(";");
         for (String filename : contentDisposition) {
             if ((filename.trim().startsWith("filename"))) {
@@ -199,5 +312,5 @@ public class GitLabClientWrapper implements VCS {
             }
         }
         return "unknown";
-    }
+    }*/
 }
