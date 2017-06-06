@@ -271,9 +271,8 @@ public class GitLabClientWrapper implements VCS {
             if ((null != group) && (null != user)) {
                 User U = gitLabApi.getGroupMember(group.getId(), user.getId());
                 return null != U;
-            } else {
-                throw new Exception("addGroupUser: Can not lookup group or user");
             }
+            return false;
         } catch (WebApplicationException e) {
             return false;
         } catch (Exception e) {
