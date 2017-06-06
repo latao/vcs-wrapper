@@ -90,25 +90,23 @@ public interface VCS {
 
     /**
      * 创建一个组
-     * @param name 组名
+     *
+     * @param name        组名
      * @param description 该组的描述
      */
     int addGroup(String name, String description) throws VCSException;
 
     /**
-     *
      * @param groupName
      */
-    boolean groupExists(String groupName);
+    boolean groupExists(String groupName) throws VCSException;
 
     /**
-     *
      * @param account
      */
     void addGroupUser(String account, String groupName, int accessLevel) throws VCSException;
 
     /**
-     *
      * @param account
      * @param groupName
      * @param accessLevel
@@ -116,23 +114,27 @@ public interface VCS {
     void setGroupUser(String account, String groupName, int accessLevel) throws VCSException;
 
     /**
-     *
      * @param account
      * @param groupName
      */
     void delGroupUser(String account, String groupName) throws VCSException;
 
     /**
-     *
      * @param account
      * @return
      */
     boolean groupUserExists(String account, String group) throws VCSException;
 
     /**
-     *
      * @param account
      * @return
      */
-    boolean userExists(String account);
+    boolean userExists(String account) throws VCSException;
+
+    /**
+     * @param account
+     * @param canCreateGroup
+     * @param external
+     */
+    void changeUserPermission(String account, boolean canCreateGroup, boolean external) throws VCSException;
 }

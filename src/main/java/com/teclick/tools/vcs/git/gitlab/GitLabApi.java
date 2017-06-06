@@ -25,6 +25,10 @@ public interface GitLabApi {
     List<Project> getProjects() throws GitException;
 
     @GET
+    @Path("groups/{id}/projects")
+    List<Project> getGroupProjects(@PathParam("id") int groupId) throws GitException;
+
+    @GET
     @Path("projects/{projectId}/repository/branches")
     List<Branch> getBranches(@PathParam("projectId") int projectId) throws GitException;
 
@@ -92,5 +96,9 @@ public interface GitLabApi {
     @DELETE
     @Path("groups/{id}/members/{user_id}")
     void delGroupMembers(@PathParam("id") int groupId, @PathParam("user_id") int userId);
+
+    @PUT
+    @Path("users/{id}")
+    void changeMemberPermission(@PathParam("id") int userId, @QueryParam("can_create_group") boolean can_create_group, @QueryParam("external") boolean external);
 
 }

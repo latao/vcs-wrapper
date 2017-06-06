@@ -5,7 +5,7 @@ import com.teclick.tools.vcs.git.GitException;
 import com.teclick.tools.vcs.git.gitlab.entity.*;
 import com.teclick.tools.vcs.utils.Zip;
 
-import javax.ws.rs.core.MultivaluedMap;
+import javax.ws.rs.WebApplicationException;
 import javax.ws.rs.core.Response;
 import java.io.File;
 import java.io.IOException;
@@ -22,7 +22,6 @@ import java.util.List;
  */
 public class GitLabClientWrapper implements VCS {
 
-    //private GitLabApiClient gitlabApiClient;
     private GitLabApi gitLabApi;
 
     private VCSContext context;
@@ -72,14 +71,17 @@ public class GitLabClientWrapper implements VCS {
     @Override
     public List<ProjectItem> listProjects(String groupName) throws VCSException {
         try {
-            List<Project> projects = gitLabApi.getProjects();
-            List<ProjectItem> result = new ArrayList<>(projects.size());
-            for (Project project : projects) {
-                if (project.getNamespace().getName().equals(groupName)) {
-                    ProjectItem item = new ProjectItem();
-                    item.setId(project.getId().toString());
-                    item.setName(project.getName());
-                    result.add(item);
+            List<ProjectItem> result = new ArrayList<>();
+            Group group = getGroup(groupName);
+            if (null != group) {
+                List<Project> projects = gitLabApi.getGroupProjects(group.getId());
+                if (null != projects) {
+                    for (Project project : projects) {
+                        ProjectItem item = new ProjectItem();
+                        item.setId(project.getId().toString());
+                        item.setName(project.getName());
+                        result.add(item);
+                    }
                 }
             }
             return result;
@@ -272,8 +274,10 @@ public class GitLabClientWrapper implements VCS {
             } else {
                 throw new Exception("addGroupUser: Can not lookup group or user");
             }
+        } catch (WebApplicationException e) {
+            return false;
         } catch (Exception e) {
-            throw new VCSException("", e);
+            throw new VCSException("groupUserExists", e);
         }
     }
 
@@ -286,6 +290,20 @@ public class GitLabClientWrapper implements VCS {
             }
         }
         return false;
+    }
+
+    @Override
+    public void changeUserPermission(String account, boolean canCreateGroup, boolean external) throws VCSException {
+        try {
+            User user = getUser(account);
+            if (null != user) {
+                gitLabApi.changeMemberPermission(user.getId(), canCreateGroup, external);
+            } else {
+                throw new Exception("Can not lookup user: " + account);
+            }
+        } catch (Exception e) {
+            throw new VCSException("changeUserPermission", e);
+        }
     }
 
     private String formatDateTimeWithISO8601(Date date) {

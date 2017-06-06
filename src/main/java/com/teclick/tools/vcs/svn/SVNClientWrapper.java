@@ -249,6 +249,11 @@ public class SVNClientWrapper implements Closeable, VCS {
         return false;
     }
 
+    @Override
+    public void changeUserPermission(String account, boolean canCreateGroup, boolean external) throws VCSException {
+
+    }
+
     private String getProjectSvnRoot(String project, String branch) {
         if ((null == branch) || (branch.isEmpty())) {
             return svnRoot.concat(project);

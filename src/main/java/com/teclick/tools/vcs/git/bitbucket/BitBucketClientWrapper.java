@@ -101,4 +101,9 @@ public class BitBucketClientWrapper implements VCS {
     public boolean userExists(String account) {
         return false;
     }
+
+    @Override
+    public void changeUserPermission(String account, boolean canCreateGroup, boolean external) throws VCSException {
+
+    }
 }
