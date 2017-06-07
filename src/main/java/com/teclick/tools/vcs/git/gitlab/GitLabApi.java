@@ -16,10 +16,6 @@ import java.util.List;
 @Produces({MediaType.APPLICATION_JSON + ";charset=UTF-8"})
 public interface GitLabApi {
 
-    @POST
-    @Path("session")
-    Session login(@QueryParam("login") String account, @QueryParam("password") String password) throws GitException;
-
     @GET
     @Path("projects")
     List<Project> getProjects() throws GitException;

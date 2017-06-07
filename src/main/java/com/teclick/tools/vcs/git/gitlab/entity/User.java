@@ -7,14 +7,17 @@ import com.fasterxml.jackson.annotation.JsonProperty;
  * User
  */
 public class User {
-
-    private int id;
-
+    // common field
     private String username;
 
+    // git lab field
+    private int id;
     private String name;
-
     private String email;
+
+    // bit bucket field
+    private String uuid;
+    private String type;
 
     @JsonProperty("access_level")
     private int accessLevel;
@@ -57,5 +60,21 @@ public class User {
 
     public void setAccessLevel(int accessLevel) {
         this.accessLevel = accessLevel;
+    }
+
+    public String getUuid() {
+        return uuid;
+    }
+
+    public void setUuid(String uuid) {
+        this.uuid = uuid;
+    }
+
+    public String getType() {
+        return type;
+    }
+
+    public void setType(String type) {
+        this.type = type;
     }
 }

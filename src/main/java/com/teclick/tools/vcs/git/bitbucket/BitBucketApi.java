@@ -1,7 +1,11 @@
 package com.teclick.tools.vcs.git.bitbucket;
 
+import com.teclick.tools.vcs.git.gitlab.entity.Group;
+import com.teclick.tools.vcs.git.gitlab.entity.User;
+
 import javax.ws.rs.*;
 import javax.ws.rs.core.MediaType;
+import java.util.List;
 
 /**
  * Created by Nelson on 2017-06-02 20:05.
@@ -12,8 +16,12 @@ import javax.ws.rs.core.MediaType;
 public interface BitBucketApi {
 
     @GET
-    @Path("user/repositories")
-    void getUserRepositories();
+    @Path("users/{userName}")
+    User getUser(@PathParam("userName") String userName);
+
+    @GET
+    @Path("teams")
+    List<Group> getGroups(@QueryParam("rule") String rule);
 
     @GET
     @Path("repositories/{username}")

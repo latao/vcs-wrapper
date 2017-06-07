@@ -2,7 +2,10 @@ package com.teclick.tools.vcs.git.bitbucket;
 
 import com.teclick.tools.vcs.*;
 import com.teclick.tools.vcs.git.GitException;
+import com.teclick.tools.vcs.git.gitlab.entity.Group;
+import com.teclick.tools.vcs.git.gitlab.entity.User;
 
+import javax.ws.rs.WebApplicationException;
 import java.io.File;
 import java.util.List;
 
@@ -28,7 +31,7 @@ public class BitBucketClientWrapper implements VCS {
 
     @Override
     public List<ProjectItem> listProjects(String groupName) throws VCSException {
-        bitBucketApi.getUserRepositories();
+        bitBucketApi.getUserRepositories(groupName);
         return null;
     }
 
@@ -77,7 +80,11 @@ public class BitBucketClientWrapper implements VCS {
 
     @Override
     public boolean groupExists(String name) {
-        return true;
+        return null != getGroup(name);
+    }
+
+    private Group getGroup(String name) {
+        return null;
     }
 
     @Override
@@ -102,7 +109,15 @@ public class BitBucketClientWrapper implements VCS {
 
     @Override
     public boolean userExists(String account) {
-        return false;
+        return null != getUser(account);
+    }
+
+    private User getUser(String account) {
+        try {
+            return bitBucketApi.getUser(account);
+        } catch (WebApplicationException e) {
+            return null;
+        }
     }
 
     @Override
