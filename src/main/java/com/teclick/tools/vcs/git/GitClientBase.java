@@ -5,14 +5,10 @@ import com.fasterxml.jackson.jaxrs.json.JacksonJsonProvider;
 import com.teclick.tools.vcs.VCSContext;
 import org.apache.cxf.interceptor.LoggingInInterceptor;
 import org.apache.cxf.interceptor.LoggingOutInterceptor;
-import org.apache.cxf.jaxrs.client.JAXRSClientFactory;
 import org.apache.cxf.jaxrs.client.JAXRSClientFactoryBean;
 import org.apache.cxf.jaxrs.client.WebClient;
 import org.apache.cxf.transport.http.HTTPConduit;
 import org.apache.cxf.transports.http.configuration.HTTPClientPolicy;
-
-import java.util.ArrayList;
-import java.util.List;
 
 /**
  * Created by Nelson on 2017-06-02 20:52.
@@ -28,7 +24,7 @@ public abstract class GitClientBase<T> {
         createClient(context, clazz);
     }
 
-    public GitClientBase(VCSContext context, int timeoutInSecond, Class<T> clazz) throws GitException {
+    public GitClientBase(VCSContext context, Class<T> clazz, int timeoutInSecond) throws GitException {
         this(context, clazz);
 
         HTTPConduit conduit = WebClient.getConfig(client).getHttpConduit();

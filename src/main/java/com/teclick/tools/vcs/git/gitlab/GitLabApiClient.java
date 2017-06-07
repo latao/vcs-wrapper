@@ -3,7 +3,6 @@ package com.teclick.tools.vcs.git.gitlab;
 import com.teclick.tools.vcs.VCSContext;
 import com.teclick.tools.vcs.git.GitClientBase;
 import com.teclick.tools.vcs.git.GitException;
-import org.apache.cxf.jaxrs.client.WebClient;
 
 import java.util.Collections;
 
@@ -24,7 +23,7 @@ public class GitLabApiClient extends GitClientBase {
 
     @SuppressWarnings("unchecked")
     public GitLabApiClient(VCSContext context, int timeoutInSecond) throws GitException {
-        super(context, timeoutInSecond, GitLabApi.class);
+        super(context, GitLabApi.class, timeoutInSecond);
     }
 
     @Override

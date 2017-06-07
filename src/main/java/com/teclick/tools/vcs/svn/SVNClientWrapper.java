@@ -215,12 +215,15 @@ public class SVNClientWrapper implements Closeable, VCS {
     }
 
     @Override
-    public int addGroup(String name, String description) {
-        return 0;
+    public void addGroup(String name, String description, String sudoUser) {
     }
 
     @Override
-    public boolean groupExists(String groupName) {
+    public void delGroup(String name) throws VCSException {
+    }
+
+    @Override
+    public boolean groupExists(String name) {
         return true;
     }
 

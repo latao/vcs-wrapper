@@ -1,5 +1,7 @@
 package com.teclick.tools.vcs.git.gitlab.entity;
 
+import com.fasterxml.jackson.annotation.JsonProperty;
+
 /**
  * Created by Nelson on 2017-06-06 10:39.
  * User
@@ -13,6 +15,9 @@ public class User {
     private String name;
 
     private String email;
+
+    @JsonProperty("access_level")
+    private int accessLevel;
 
     public int getId() {
         return id;
@@ -44,5 +49,13 @@ public class User {
 
     public void setEmail(String email) {
         this.email = email;
+    }
+
+    public int getAccessLevel() {
+        return accessLevel;
+    }
+
+    public void setAccessLevel(int accessLevel) {
+        this.accessLevel = accessLevel;
     }
 }

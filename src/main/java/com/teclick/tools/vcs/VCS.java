@@ -94,47 +94,54 @@ public interface VCS {
      * @param name        组名
      * @param description 该组的描述
      */
-    int addGroup(String name, String description) throws VCSException;
+    void addGroup(String name, String description, String sudoUser) throws VCSException;
 
     /**
-     * @param groupName
+     *
+     * @param name group name
+     * @throws VCSException
      */
-    boolean groupExists(String groupName) throws VCSException;
+    void delGroup(String name) throws VCSException;
 
     /**
-     * @param account
+     * @param name group name
+     */
+    boolean groupExists(String name) throws VCSException;
+
+    /**
+     * @param account login account
      */
     void addGroupUser(String account, String groupName, int accessLevel) throws VCSException;
 
     /**
-     * @param account
-     * @param groupName
-     * @param accessLevel
+     * @param account login account
+     * @param groupName group name
+     * @param accessLevel access level 50 owner, 40 master, 30 developer
      */
     void setGroupUser(String account, String groupName, int accessLevel) throws VCSException;
 
     /**
-     * @param account
-     * @param groupName
+     * @param account login user
+     * @param groupName group name
      */
     void delGroupUser(String account, String groupName) throws VCSException;
 
     /**
-     * @param account
-     * @return
+     * @param account login user
+     * @return boolean
      */
     boolean isUserInGroup(String account, String group) throws VCSException;
 
     /**
-     * @param account
-     * @return
+     * @param account login account
+     * @return boolean
      */
     boolean userExists(String account) throws VCSException;
 
     /**
-     * @param account
-     * @param canCreateGroup
-     * @param external
+     * @param account login user
+     * @param canCreateGroup can create group
+     * @param external external account
      */
     void changeUserPermission(String account, boolean canCreateGroup, boolean external) throws VCSException;
 }

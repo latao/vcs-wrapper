@@ -3,7 +3,6 @@ package com.teclick.tools.vcs.git.bitbucket;
 import com.teclick.tools.vcs.VCSContext;
 import com.teclick.tools.vcs.git.GitClientBase;
 import com.teclick.tools.vcs.git.GitException;
-import org.apache.cxf.jaxrs.client.WebClient;
 
 /**
  * Created by Nelson on 2017-06-02 20:10.
@@ -22,7 +21,7 @@ public class BitBucketApiClient extends GitClientBase {
 
     @SuppressWarnings("unchecked")
     public BitBucketApiClient(VCSContext context, int timeoutInSecond) throws GitException {
-        super(context, timeoutInSecond, BitBucketApi.class);
+        super(context, BitBucketApi.class, timeoutInSecond);
     }
 
     @Override

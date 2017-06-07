@@ -152,10 +152,30 @@ public class GitLabClientWrapper implements VCS {
     @Override
     public void importToVcs(String groupName, File folder, String projectName, String branch) throws VCSException {
         try {
+            String sudoUser = null;
+            Group group = getGroup(groupName);
+            if (null != group) {
+                List<User> users = gitLabApi.getGroupMembers(group.getId());
+                for (User user : users) {
+                    if (user.getAccessLevel() == 50) {
+                        sudoUser = user.getUsername();
+                    }
+                }
+            } else {
+                throw new GitException("Can not lookup group name " + groupName);
+            }
+
+            Namespace namespace = null;
             List<Namespace> namespaces = gitLabApi.searchNamespace(groupName);
-            if ((null != namespaces) && (namespaces.size() == 1)) {
-                Namespace namespace = namespaces.get(0);
-                gitLabApi.createProject(projectName, namespace.getId(), "Create project by dev central", false);
+            for (Namespace space : namespaces) {
+                if (space.getName().equals(groupName)) {
+                    namespace = space;
+                    break;
+                }
+            }
+
+            if (null != namespace) {
+                gitLabApi.addProject(projectName, namespace.getId(), "Project initialize ...", false, sudoUser);
             } else {
                 throw new GitException("Group name not found");
             }
@@ -166,7 +186,6 @@ public class GitLabClientWrapper implements VCS {
 
     @Override
     public void createBranch(String project, String branch, String newBranch) throws VCSException {
-
     }
 
     @Override
@@ -202,31 +221,60 @@ public class GitLabClientWrapper implements VCS {
     }
 
     @Override
-    public int addGroup(String name, String description) throws VCSException {
+    public void addGroup(String name, String description, String sudoUser) throws VCSException {
         try {
-            Group group = gitLabApi.createGroup(name, name, description);
-            return group.getId();
+            Group group = getGroup(name);
+            if (null == group) {
+                gitLabApi.addGroup(name, name, description, sudoUser);
+            } else {
+                throw new GitException("Group name [" + name + "] already exists");
+            }
         } catch (Exception e) {
             throw new VCSException("addGroup", e);
         }
     }
 
     @Override
-    public boolean groupExists(String groupName) {
-        return getGroup(groupName) != null;
+    public void delGroup(String name) throws VCSException {
+        try {
+            Group group = getGroup(name);
+            if (null != group) {
+                gitLabApi.delGroup(group.getId());
+            } else {
+                throw new GitException("Group name [" + name + "] not found");
+            }
+        } catch (Exception e) {
+            throw new VCSException("delGroup", e);
+        }
     }
 
+    @Override
+    public boolean groupExists(String name) {
+        return getGroup(name) != null;
+    }
+
+    /**
+     * @param account login account
+     * @param groupName group name
+     * @param accessLevel
+         10 => Guest access
+         20 => Reporter access
+         30 => Developer access
+         40 => Master access
+         50 => Owner access # Only valid for groups
+     * @throws VCSException
+     */
     @Override
     public void addGroupUser(String account, String groupName, int accessLevel) throws VCSException {
         try {
             Group group = getGroup(groupName);
-
             User user = getUser(account);
-
             if ((null != group) && (null != user)) {
-                gitLabApi.createGroupMember(group.getId(), user.getId(), accessLevel);
+                gitLabApi.addGroupMember(group.getId(), user.getId(), accessLevel);
             } else {
-                throw new Exception("addGroupUser: Can not lookup group or user");
+                throw new GitException("Can not lookup "
+                        + (null == group ? "group name [" + groupName + "] " : "")
+                        + (null == user ? "user name [" + account + "] " : ""));
             }
         } catch (Exception e) {
             throw new VCSException("addGroupUser", e);
@@ -241,10 +289,12 @@ public class GitLabClientWrapper implements VCS {
             if ((null != group) && (null != user)) {
                 gitLabApi.setGroupMembers(group.getId(), user.getId(), accessLevel);
             } else {
-                throw new Exception("addGroupUser: Can not lookup group or user");
+                throw new GitException("Can not lookup "
+                        + (null == group ? "group name [" + groupName + "] " : "")
+                        + (null == user ? "user name [" + account + "] " : ""));
             }
         } catch (Exception e) {
-            throw new VCSException("", e);
+            throw new VCSException("setGroupUser", e);
         }
     }
 
@@ -256,10 +306,12 @@ public class GitLabClientWrapper implements VCS {
             if ((null != group) && (null != user)) {
                 gitLabApi.delGroupMembers(group.getId(), user.getId());
             } else {
-                throw new Exception("addGroupUser: Can not lookup group or user");
+                throw new GitException("Can not lookup "
+                        + (null == group ? "group name [" + groupName + "] " : "")
+                        + (null == user ? "user name [" + account + "] " : ""));
             }
         } catch (Exception e) {
-            throw new VCSException("", e);
+            throw new VCSException("delGroupUser", e);
         }
     }
 
@@ -298,7 +350,7 @@ public class GitLabClientWrapper implements VCS {
             if (null != user) {
                 gitLabApi.changeMemberPermission(user.getId(), canCreateGroup, external);
             } else {
-                throw new Exception("Can not lookup user: " + account);
+                throw new GitException("Can not lookup user: " + account);
             }
         } catch (Exception e) {
             throw new VCSException("changeUserPermission", e);

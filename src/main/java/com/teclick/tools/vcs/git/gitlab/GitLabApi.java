@@ -54,12 +54,12 @@ public interface GitLabApi {
 
     @POST
     @Path("projects")
-    Project createProject(@QueryParam("name") String projectName, @QueryParam("namespace_id") int namespaceId,
-                          @QueryParam("description") String description, @QueryParam("public") boolean isPublic) throws GitException;
+    Project addProject(@QueryParam("name") String projectName, @QueryParam("namespace_id") int namespaceId,
+                       @QueryParam("description") String description, @QueryParam("public") boolean isPublic, @HeaderParam("SUDO") String sudoUser) throws GitException;
 
     @POST
     @Path("groups")
-    Group createGroup(@QueryParam("name") String name, @QueryParam("path") String path, @QueryParam("description") String description);
+    Group addGroup(@QueryParam("name") String name, @QueryParam("path") String path, @QueryParam("description") String description, @HeaderParam("SUDO") String sudoUser);
 
     @GET
     @Path("groups")
@@ -68,6 +68,10 @@ public interface GitLabApi {
     @GET
     @Path("groups")
     List<Group> getGroups(@QueryParam("search") String groupName);
+
+    @DELETE
+    @Path("groups/{id}")
+    void delGroup(@PathParam("id") int id);
 
     @GET
     @Path("users")
@@ -79,7 +83,7 @@ public interface GitLabApi {
 
     @POST
     @Path("groups/{id}/members")
-    void createGroupMember(@PathParam("id") int groupId, @QueryParam("user_id") int userId, @QueryParam("access_level") int accussLevel);
+    void addGroupMember(@PathParam("id") int groupId, @QueryParam("user_id") int userId, @QueryParam("access_level") int accessLevel);
 
     @GET
     @Path("groups/{id}/members")
