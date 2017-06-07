@@ -101,4 +101,12 @@ public interface GitLabApi {
     @Path("users/{id}")
     void changeMemberPermission(@PathParam("id") int userId, @QueryParam("can_create_group") boolean can_create_group, @QueryParam("external") boolean external);
 
+    @PUT
+    @Path("groups/{id}")
+    void setGroup(@PathParam("id") int groupId, @QueryParam("name") String name, @QueryParam("path") String path, @QueryParam("description") String description);
+
+    @POST
+    @Path("groups/{id}/projects/{project_id}")
+    void transferProjectToGroup(@PathParam("id") int groupId, @PathParam("project_id") int projectId);
+
 }
