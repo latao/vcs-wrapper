@@ -15,9 +15,15 @@ public class VCSContext {
         this.password = password;
     }
 
+    public VCSContext(String rootPath, String privateToken) {
+        this.rootPath = rootPath;
+        this.privateToken = privateToken;
+    }
+
     private String rootPath;
     private String account;
     private String password;
+    private String privateToken = null;
 
     public String getPassword() {
         return password;
@@ -43,4 +49,11 @@ public class VCSContext {
         this.rootPath = rootPath;
     }
 
+    public String getPrivateToken() {
+        return privateToken;
+    }
+
+    public void setPrivateToken(String privateToken) {
+        this.privateToken = privateToken;
+    }
 }

@@ -28,7 +28,7 @@ public class GitLabClientWrapper implements VCS {
 
     public GitLabClientWrapper(VCSContext context) throws VCSException {
         try {
-            GitLabApiClient gitLabApiClient = new GitLabApiClient(context.getRootPath(), context.getAccount(), context.getPassword(), 10000);
+            GitLabApiClient gitLabApiClient = new GitLabApiClient(context, 10000);
             this.gitLabApi = gitLabApiClient.getGitLabApi();
         } catch (GitException e) {
             throw new VCSException("GitLabClientWrapper", e);

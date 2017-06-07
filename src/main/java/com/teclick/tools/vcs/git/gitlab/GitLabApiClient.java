@@ -1,8 +1,8 @@
 package com.teclick.tools.vcs.git.gitlab;
 
+import com.teclick.tools.vcs.VCSContext;
 import com.teclick.tools.vcs.git.GitClientBase;
 import com.teclick.tools.vcs.git.GitException;
-import com.teclick.tools.vcs.git.gitlab.entity.Session;
 import org.apache.cxf.jaxrs.client.WebClient;
 
 /**
@@ -18,24 +18,19 @@ public class GitLabApiClient extends GitClientBase {
     private GitLabApi gitLabApi;
 
     @SuppressWarnings("unchecked")
-    public GitLabApiClient(String url, String account, String password) throws GitException {
-        super(url, account, password, GitLabApi.class);
+    public GitLabApiClient(VCSContext context) throws GitException {
+        super(context, GitLabApi.class);
     }
 
     @SuppressWarnings("unchecked")
-    public GitLabApiClient(String url, String account, String password, int timeoutInSecond) throws GitException {
-        super(fixUrl(url), account, password, timeoutInSecond, GitLabApi.class);
-    }
-
-    private static String fixUrl(String url) {
-        return url + (url.endsWith("/") ? "api/v4" : "/api/v4");
+    public GitLabApiClient(VCSContext context, int timeoutInSecond) throws GitException {
+        super(context, timeoutInSecond, GitLabApi.class);
     }
 
     @Override
-    protected void addAuthorizationHeader(String account, String password) throws GitException {
+    protected void addAuthorizationHeader(VCSContext context) throws GitException {
         gitLabApi = (GitLabApi) client;
-        Session session = gitLabApi.login(account, password);
-        WebClient.client(gitLabApi).header("PRIVATE-TOKEN", session.getPrivate_token());
+        WebClient.client(gitLabApi).header("PRIVATE-TOKEN", context.getPrivateToken());
     }
 
 }

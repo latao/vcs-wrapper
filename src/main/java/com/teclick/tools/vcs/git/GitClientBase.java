@@ -2,6 +2,7 @@ package com.teclick.tools.vcs.git;
 
 import com.fasterxml.jackson.databind.DeserializationFeature;
 import com.fasterxml.jackson.jaxrs.json.JacksonJsonProvider;
+import com.teclick.tools.vcs.VCSContext;
 import org.apache.cxf.interceptor.LoggingInInterceptor;
 import org.apache.cxf.interceptor.LoggingOutInterceptor;
 import org.apache.cxf.jaxrs.client.JAXRSClientFactory;
@@ -20,7 +21,7 @@ public abstract class GitClientBase<T> {
 
     protected T client;
 
-    public GitClientBase(String url, String account, String password, Class<T> clazz) throws GitException {
+    public GitClientBase(VCSContext context, Class<T> clazz) throws GitException {
         JacksonJsonProvider jsonProvider = new JacksonJsonProvider();
         jsonProvider.configure(DeserializationFeature.FAIL_ON_UNKNOWN_PROPERTIES, false);
 
@@ -29,18 +30,18 @@ public abstract class GitClientBase<T> {
         providers.add(jsonProvider);
         providers.add(exceptionHandler);
 
-        client = JAXRSClientFactory.create(url, clazz, providers, true);
+        client = JAXRSClientFactory.create(context.getRootPath(), clazz, providers, false);
 
         if (System.getProperty("debug", "").equals("true")) {
             WebClient.getConfig(client).getInInterceptors().add(new LoggingInInterceptor());
             WebClient.getConfig(client).getOutInterceptors().add(new LoggingOutInterceptor());
         }
 
-        addAuthorizationHeader(account, password);
+        addAuthorizationHeader(context);
     }
 
-    public GitClientBase(String url, String account, String password, int timeoutInSecond, Class<T> clazz) throws GitException {
-        this(url, account, password, clazz);
+    public GitClientBase(VCSContext context, int timeoutInSecond, Class<T> clazz) throws GitException {
+        this(context, clazz);
 
         HTTPConduit conduit = WebClient.getConfig(client).getHttpConduit();
         HTTPClientPolicy policy = new HTTPClientPolicy();
@@ -48,5 +49,5 @@ public abstract class GitClientBase<T> {
         conduit.setClient(policy);
     }
 
-    protected abstract void addAuthorizationHeader(String account, String password) throws GitException;
+    protected abstract void addAuthorizationHeader(VCSContext context) throws GitException;
 }

@@ -18,7 +18,7 @@ public class BitBucketClientWrapper implements VCS {
 
     public BitBucketClientWrapper(VCSContext context) throws VCSException {
         try {
-            BitBucketApiClient bitBucketApiClient = new BitBucketApiClient(context.getRootPath(), context.getAccount(), context.getPassword(), 10000);
+            BitBucketApiClient bitBucketApiClient = new BitBucketApiClient(context, 10000);
             this.bitBucketApi = bitBucketApiClient.getBitBucketApi();
         } catch (GitException e) {
             throw new VCSException("BitBucketClientWrapper", e);
