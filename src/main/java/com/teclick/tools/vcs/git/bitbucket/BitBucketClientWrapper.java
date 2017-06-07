@@ -93,7 +93,7 @@ public class BitBucketClientWrapper implements VCS {
     }
 
     @Override
-    public boolean groupUserExists(String account, String group) {
+    public boolean isUserInGroup(String account, String group) {
         return false;
     }
 

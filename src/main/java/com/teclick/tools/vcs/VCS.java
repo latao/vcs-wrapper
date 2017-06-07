@@ -123,7 +123,7 @@ public interface VCS {
      * @param account
      * @return
      */
-    boolean groupUserExists(String account, String group) throws VCSException;
+    boolean isUserInGroup(String account, String group) throws VCSException;
 
     /**
      * @param account

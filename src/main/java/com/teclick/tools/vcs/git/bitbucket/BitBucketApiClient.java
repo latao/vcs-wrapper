@@ -12,10 +12,8 @@ import org.apache.cxf.jaxrs.client.WebClient;
 public class BitBucketApiClient extends GitClientBase {
 
     public BitBucketApi getBitBucketApi() {
-        return bitBucketApi;
+        return (BitBucketApi) client;
     }
-
-    private BitBucketApi bitBucketApi;
 
     @SuppressWarnings("unchecked")
     public BitBucketApiClient(VCSContext context) throws GitException {
@@ -29,9 +27,8 @@ public class BitBucketApiClient extends GitClientBase {
 
     @Override
     protected void addAuthorizationHeader(VCSContext context) {
-        bitBucketApi = (BitBucketApi) client;
-        String authorizationHeader = "Basic " + org.apache.cxf.common.util.Base64Utility.encode((context.getAccount() + ":" + context.getPassword()).getBytes());
-        WebClient.client(client).header("Authorization", authorizationHeader);
+        bean.setUsername(context.getAccount());
+        bean.setPassword(context.getPassword());
     }
 
 }

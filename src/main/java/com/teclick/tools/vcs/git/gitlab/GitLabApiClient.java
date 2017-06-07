@@ -5,6 +5,8 @@ import com.teclick.tools.vcs.git.GitClientBase;
 import com.teclick.tools.vcs.git.GitException;
 import org.apache.cxf.jaxrs.client.WebClient;
 
+import java.util.Collections;
+
 /**
  * Created by Nelson on 2017-05-31 14:04.
  * GitLabApiClient
@@ -12,10 +14,8 @@ import org.apache.cxf.jaxrs.client.WebClient;
 public class GitLabApiClient extends GitClientBase {
 
     public GitLabApi getGitLabApi() {
-        return gitLabApi;
+        return (GitLabApi) client;
     }
-
-    private GitLabApi gitLabApi;
 
     @SuppressWarnings("unchecked")
     public GitLabApiClient(VCSContext context) throws GitException {
@@ -29,8 +29,7 @@ public class GitLabApiClient extends GitClientBase {
 
     @Override
     protected void addAuthorizationHeader(VCSContext context) throws GitException {
-        gitLabApi = (GitLabApi) client;
-        WebClient.client(gitLabApi).header("PRIVATE-TOKEN", context.getPrivateToken());
+        bean.setHeaders(Collections.singletonMap("PRIVATE-TOKEN", context.getPrivateToken()));
     }
 
 }

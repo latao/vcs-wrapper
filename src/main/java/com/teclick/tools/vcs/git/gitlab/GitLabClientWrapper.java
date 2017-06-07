@@ -264,7 +264,7 @@ public class GitLabClientWrapper implements VCS {
     }
 
     @Override
-    public boolean groupUserExists(String account, String groupName) throws VCSException {
+    public boolean isUserInGroup(String account, String groupName) throws VCSException {
         try {
             Group group = getGroup(groupName);
             User user = getUser(account);
@@ -276,7 +276,7 @@ public class GitLabClientWrapper implements VCS {
         } catch (WebApplicationException e) {
             return false;
         } catch (Exception e) {
-            throw new VCSException("groupUserExists", e);
+            throw new VCSException("isUserInGroup", e);
         }
     }
 
