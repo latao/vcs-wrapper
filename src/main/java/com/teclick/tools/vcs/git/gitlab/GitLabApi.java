@@ -18,11 +18,11 @@ public interface GitLabApi {
 
     @GET
     @Path("projects")
-    List<Project> getProjects() throws GitException;
+    List<Project> getProjects(@QueryParam("search") String projectName, @QueryParam("simple") boolean simple) throws GitException;
 
     @GET
     @Path("groups/{id}/projects")
-    List<Project> getGroupProjects(@PathParam("id") int groupId) throws GitException;
+    List<Project> getGroupProjects(@PathParam("id") int groupId, @QueryParam("simple") boolean simple, @QueryParam("order_by") String orderBy, @QueryParam("sort") String sort, @QueryParam("per_page") int pageSize) throws GitException;
 
     @GET
     @Path("projects/{projectId}/repository/branches")

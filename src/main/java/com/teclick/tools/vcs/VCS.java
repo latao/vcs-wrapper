@@ -144,4 +144,19 @@ public interface VCS {
      * @param external external account
      */
     void changeUserPermission(String account, boolean canCreateGroup, boolean external) throws VCSException;
+
+    /**
+     * Transfer Project To Group
+     * @param groupName group name
+     * @param projectName project name
+     */
+    void transferProjectToGroup(String groupName, String projectName) throws VCSException;
+
+    /**
+     * Transfer Group Projects To Group
+     * @param groupSource source group
+     * @param groupTarget target group
+     * @throws VCSException exception
+     */
+    void transferGroupProjectsToGroup(String groupSource, String groupTarget) throws VCSException;
 }

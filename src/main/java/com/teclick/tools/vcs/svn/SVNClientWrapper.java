@@ -121,7 +121,7 @@ public class SVNClientWrapper implements Closeable, VCS {
         try {
             SVNURL svnurl = SVNURL.parseURIEncoded(svnRoot);
             SVNRepository repository = svnClientManager.createRepository(svnurl, false);
-            Collection entries = repository.getDir("/", -1, null, (Collection) null);
+            Collection entries = repository.getDir("", -1, null, (Collection) null);
 
             List<ProjectItem> result = new ArrayList<>(entries.size());
 
@@ -254,6 +254,16 @@ public class SVNClientWrapper implements Closeable, VCS {
 
     @Override
     public void changeUserPermission(String account, boolean canCreateGroup, boolean external) throws VCSException {
+
+    }
+
+    @Override
+    public void transferProjectToGroup(String groupName, String projectName) {
+
+    }
+
+    @Override
+    public void transferGroupProjectsToGroup(String groupSource, String groupTarget) throws VCSException {
 
     }
 

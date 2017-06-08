@@ -41,16 +41,16 @@ public class GitLabClientWrapper implements VCS {
         try {
             Integer projectId = Integer.parseInt(project);
 
-            Date endDate = new Date();
-            endDate.setTime(endDate.getTime() + 1000 * 60 * 10);
-            String strEndDate = formatDateTimeWithISO8601(endDate);
+            //Date endDate = new Date();
+            //endDate.setTime(endDate.getTime() + 1000 * 60 * 10);
+            //String strEndDate = formatDateTimeWithISO8601(endDate);
 
             String strBeginDate = null;
             if ((null != lastBuildVersion) && (!lastBuildVersion.trim().equals(""))) {
                 strBeginDate = getCommitDate(projectId, lastBuildVersion);
             }
 
-            List<Commit> commits = gitLabApi.getCommits(projectId, branch, null, strBeginDate, strEndDate);
+            List<Commit> commits = gitLabApi.getCommits(projectId, branch, null, strBeginDate, null);
             List<VersionCommentItem> result = new ArrayList<>(commits.size());
             for (Commit commit : commits) {
                 if (!commit.getId().equals(lastBuildVersion)) {
@@ -74,7 +74,7 @@ public class GitLabClientWrapper implements VCS {
             List<ProjectItem> result = new ArrayList<>();
             Group group = getGroup(groupName);
             if (null != group) {
-                List<Project> projects = gitLabApi.getGroupProjects(group.getId());
+                List<Project> projects = gitLabApi.getGroupProjects(group.getId(), true, "name", "asc", 100);
                 if (null != projects) {
                     for (Project project : projects) {
                         ProjectItem item = new ProjectItem();
@@ -193,7 +193,6 @@ public class GitLabClientWrapper implements VCS {
         return context;
     }
 
-
     //=====================================================================================
     // Group & User
     private User getUser(String account) {
@@ -254,14 +253,13 @@ public class GitLabClientWrapper implements VCS {
     }
 
     /**
-     * @param account login account
-     * @param groupName group name
-     * @param accessLevel
-         10 => Guest access
-         20 => Reporter access
-         30 => Developer access
-         40 => Master access
-         50 => Owner access # Only valid for groups
+     * @param account     login account
+     * @param groupName   group name
+     * @param accessLevel 10 => Guest access
+     *                    20 => Reporter access
+     *                    30 => Developer access
+     *                    40 => Master access
+     *                    50 => Owner access # Only valid for groups
      * @throws VCSException exception
      */
     @Override
@@ -354,6 +352,58 @@ public class GitLabClientWrapper implements VCS {
             }
         } catch (Exception e) {
             throw new VCSException("changeUserPermission", e);
+        }
+    }
+
+    @Override
+    public void transferProjectToGroup(String groupName, String projectName) throws VCSException {
+        try {
+            Group group = getGroup(groupName);
+            if (null == group) {
+                throw new GitException("Can not lookup group: " + groupName);
+            }
+
+            Project myProject = null;
+            List<Project> projects = gitLabApi.getProjects(projectName, true);
+            for (Project project : projects) {
+                if (project.getName().equals(projectName)) {
+                    myProject = project;
+                    break;
+                }
+            }
+
+            if (null == myProject) {
+                throw new GitException("Can not lookup project: " + projectName);
+            }
+
+            gitLabApi.transferProjectToGroup(group.getId(), myProject.getId());
+
+        } catch (Exception e) {
+            throw new VCSException("transferProjectToGroup", e);
+        }
+    }
+
+    @Override
+    public void transferGroupProjectsToGroup(String groupSource, String groupTarget) throws VCSException {
+        try {
+            Group source = getGroup(groupSource);
+            if (null == source) {
+                throw new GitException("Can not lookup source group: " + groupSource);
+            }
+
+            Group target = getGroup(groupTarget);
+            if (null == target) {
+                throw new GitException("Can not lookup target group: " + groupTarget);
+            }
+
+            List<Project> projects = gitLabApi.getGroupProjects(source.getId(), true, null, null, 100);
+            if (null != projects) {
+                for (Project prj : projects) {
+                    gitLabApi.transferProjectToGroup(target.getId(), prj.getId());
+                }
+            }
+        } catch (Exception e) {
+            throw new VCSException("transferGroupProjectsToGroup", e);
         }
     }
 

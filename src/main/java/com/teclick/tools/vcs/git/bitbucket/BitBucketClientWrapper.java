@@ -124,4 +124,14 @@ public class BitBucketClientWrapper implements VCS {
     public void changeUserPermission(String account, boolean canCreateGroup, boolean external) throws VCSException {
 
     }
+
+    @Override
+    public void transferProjectToGroup(String groupName, String projectName) {
+
+    }
+
+    @Override
+    public void transferGroupProjectsToGroup(String groupSource, String groupTarget) throws VCSException {
+
+    }
 }
