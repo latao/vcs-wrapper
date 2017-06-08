@@ -2,7 +2,7 @@ package com.teclick.tools.vcs.git.gitlab;
 
 import com.teclick.tools.vcs.*;
 import com.teclick.tools.vcs.git.GitException;
-import com.teclick.tools.vcs.git.gitlab.entity.*;
+import com.teclick.tools.vcs.git.entity.*;
 import com.teclick.tools.vcs.utils.Zip;
 
 import javax.ws.rs.WebApplicationException;
@@ -262,7 +262,7 @@ public class GitLabClientWrapper implements VCS {
          30 => Developer access
          40 => Master access
          50 => Owner access # Only valid for groups
-     * @throws VCSException
+     * @throws VCSException exception
      */
     @Override
     public void addGroupUser(String account, String groupName, int accessLevel) throws VCSException {
@@ -371,15 +371,4 @@ public class GitLabClientWrapper implements VCS {
         Date endDate = commitTargetBuild.getCreated_at();
         return formatDateTimeWithISO8601(endDate);
     }
-
-/*    private String getFileName(MultivaluedMap<String, String> header) {
-        String[] contentDisposition = header.getFirst("Content-Disposition").split(";");
-        for (String filename : contentDisposition) {
-            if ((filename.trim().startsWith("filename"))) {
-                String[] name = filename.split("=");
-                return name[1].trim().replaceAll("\"", "");
-            }
-        }
-        return "unknown";
-    }*/
 }

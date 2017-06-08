@@ -2,8 +2,8 @@ package com.teclick.tools.vcs.git.bitbucket;
 
 import com.teclick.tools.vcs.*;
 import com.teclick.tools.vcs.git.GitException;
-import com.teclick.tools.vcs.git.gitlab.entity.Group;
-import com.teclick.tools.vcs.git.gitlab.entity.User;
+import com.teclick.tools.vcs.git.entity.Group;
+import com.teclick.tools.vcs.git.entity.User;
 
 import javax.ws.rs.WebApplicationException;
 import java.io.File;

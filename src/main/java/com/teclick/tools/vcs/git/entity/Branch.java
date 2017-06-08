@@ -1,4 +1,4 @@
-package com.teclick.tools.vcs.git.gitlab.entity;
+package com.teclick.tools.vcs.git.entity;
 
 /**
  * Created by Nelson on 2017-06-01 21:47.

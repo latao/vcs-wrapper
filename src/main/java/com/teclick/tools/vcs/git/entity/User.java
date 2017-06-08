@@ -1,4 +1,4 @@
-package com.teclick.tools.vcs.git.gitlab.entity;
+package com.teclick.tools.vcs.git.entity;
 
 import com.fasterxml.jackson.annotation.JsonProperty;
 

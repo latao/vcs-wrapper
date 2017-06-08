@@ -1,7 +1,7 @@
 package com.teclick.tools.vcs.git.gitlab;
 
 import com.teclick.tools.vcs.git.GitException;
-import com.teclick.tools.vcs.git.gitlab.entity.*;
+import com.teclick.tools.vcs.git.entity.*;
 
 import javax.ws.rs.*;
 import javax.ws.rs.core.MediaType;
