@@ -112,6 +112,8 @@ public class SVNClientWrapper implements Closeable, VCS {
             throw new VCSException("getVersionsAfterLastBuild", e);
         }
 
+        Collections.reverse(result);
+
         return result;
     }
 
