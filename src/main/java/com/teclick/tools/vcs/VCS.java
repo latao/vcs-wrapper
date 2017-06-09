@@ -97,9 +97,9 @@ public interface VCS {
     void addGroup(String name, String description, String sudoUser) throws VCSException;
 
     /**
-     *
+     * delete group
      * @param name group name
-     * @throws VCSException
+     * @throws VCSException exception
      */
     void delGroup(String name) throws VCSException;
 

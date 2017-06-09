@@ -2,4 +2,4 @@
 .gitignore
 .idea/
 target/
-/src/main/test/
+/src/test/
