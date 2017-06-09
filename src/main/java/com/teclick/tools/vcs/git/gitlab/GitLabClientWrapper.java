@@ -3,6 +3,7 @@ package com.teclick.tools.vcs.git.gitlab;
 import com.teclick.tools.vcs.*;
 import com.teclick.tools.vcs.git.GitException;
 import com.teclick.tools.vcs.git.entity.*;
+import com.teclick.tools.vcs.git.gitlab.entity.ProjectFiles;
 import com.teclick.tools.vcs.utils.Zip;
 
 import javax.ws.rs.WebApplicationException;
@@ -129,7 +130,7 @@ public class GitLabClientWrapper implements VCS {
 
             String strBeginDate = null;
 
-            if ((null != lastBuildVersion) && (lastBuildVersion.trim().equals(""))) {
+            if ((null != lastBuildVersion) && (lastBuildVersion.trim().length() > 0)) {
                 strBeginDate = getCommitDate(projectId, lastBuildVersion);
             }
 
@@ -152,13 +153,14 @@ public class GitLabClientWrapper implements VCS {
     @Override
     public void importToVcs(String groupName, File folder, String projectName, String branch) throws VCSException {
         try {
-            String sudoUser = null;
+            Integer sudoId = null;
             Group group = getGroup(groupName);
             if (null != group) {
                 List<User> users = gitLabApi.getGroupMembers(group.getId());
                 for (User user : users) {
                     if (user.getAccessLevel() == 50) {
-                        sudoUser = user.getUsername();
+                        sudoId = user.getId();
+                        break;
                     }
                 }
             } else {
@@ -175,12 +177,22 @@ public class GitLabClientWrapper implements VCS {
             }
 
             if (null != namespace) {
-                gitLabApi.addProject(projectName, namespace.getId(), "Project initialize ...", false, sudoUser);
+                // 创建项目
+                Project project = gitLabApi.addProject(projectName, namespace.getId(), "Project Initialize", false, sudoId);
+                ProjectFiles projectFiles = new ProjectFiles("Project Initialize");
+                try {
+                    String filesContent = projectFiles.buildContent(folder);
+                    // 导入文件
+                    gitLabApi.commitFiles(project.getId(), filesContent);
+                } catch (IOException e) {
+                    throw new GitException("Upload project files", e);
+                }
             } else {
                 throw new GitException("Group name not found");
             }
+
         } catch (GitException e) {
-            throw new VCSException("importToVcs:searchNamespace", e);
+            throw new VCSException("importToVcs", e);
         }
     }
 

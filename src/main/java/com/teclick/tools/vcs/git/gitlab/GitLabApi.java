@@ -51,7 +51,7 @@ public interface GitLabApi {
     @POST
     @Path("projects")
     Project addProject(@QueryParam("name") String projectName, @QueryParam("namespace_id") int namespaceId,
-                       @QueryParam("description") String description, @QueryParam("public") boolean isPublic, @HeaderParam("SUDO") String sudoUser) throws GitException;
+                       @QueryParam("description") String description, @QueryParam("public") boolean isPublic, @HeaderParam("SUDO") Integer sudoUser) throws GitException;
 
     @POST
     @Path("groups")
@@ -108,5 +108,9 @@ public interface GitLabApi {
     @POST
     @Path("groups/{id}/projects/{project_id}")
     void transferProjectToGroup(@PathParam("id") int groupId, @PathParam("project_id") int projectId);
+
+    @POST
+    @Path("projects/{id}/repository/commits")
+    void commitFiles(@PathParam("id") int projectId, String content);
 
 }

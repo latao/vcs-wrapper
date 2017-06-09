@@ -79,12 +79,20 @@ public class SVNClientWrapper implements Closeable, VCS {
         return result;
     }
 
+    private long convertLongDefault(String longString) {
+        try {
+            return Long.parseLong(longString);
+        } catch (Exception e) {
+            return 0;
+        }
+    }
+
     @Override
     public List<VersionCommentItem> getVersionsAfterLastBuild(String project, String branch, String lastBuildVersion) throws VCSException {
 
         String projectSvnRoot = getProjectSvnRoot(project, branch);
 
-        final long lastBuildVersionId = Long.parseLong(lastBuildVersion);
+        final long lastBuildVersionId = convertLongDefault(lastBuildVersion);
 
         final List<VersionCommentItem> result = new ArrayList<>();
         try {
