@@ -2,6 +2,7 @@ package com.teclick.tools.vcs.git.gitlab;
 
 import com.teclick.tools.vcs.*;
 import com.teclick.tools.vcs.git.GitException;
+import com.teclick.tools.vcs.git.ResponseHttpHeaders;
 import com.teclick.tools.vcs.git.entity.*;
 import com.teclick.tools.vcs.git.gitlab.entity.ProjectFiles;
 import com.teclick.tools.vcs.utils.Zip;
@@ -75,7 +76,8 @@ public class GitLabClientWrapper implements VCS {
             List<ProjectItem> result = new ArrayList<>();
             Group group = getGroup(groupName);
             if (null != group) {
-                List<Project> projects = gitLabApi.getGroupProjects(group.getId(), true, "name", "asc", 100);
+                ResponseHttpHeaders responseHttpHeaders = new ResponseHttpHeaders();
+                List<Project> projects = gitLabApi.getGroupProjects(group.getId(), true, "name", "asc", 100, responseHttpHeaders);
                 if (null != projects) {
                     for (Project project : projects) {
                         ProjectItem item = new ProjectItem();
@@ -408,7 +410,7 @@ public class GitLabClientWrapper implements VCS {
                 throw new GitException("Can not lookup target group: " + groupTarget);
             }
 
-            List<Project> projects = gitLabApi.getGroupProjects(source.getId(), true, null, null, 100);
+            List<Project> projects = gitLabApi.getGroupProjects(source.getId(), true, null, null, 100, null);
             if (null != projects) {
                 for (Project prj : projects) {
                     gitLabApi.transferProjectToGroup(target.getId(), prj.getId());

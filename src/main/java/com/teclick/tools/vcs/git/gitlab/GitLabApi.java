@@ -1,9 +1,11 @@
 package com.teclick.tools.vcs.git.gitlab;
 
 import com.teclick.tools.vcs.git.GitException;
+import com.teclick.tools.vcs.git.ResponseHttpHeaders;
 import com.teclick.tools.vcs.git.entity.*;
 
 import javax.ws.rs.*;
+import javax.ws.rs.core.Context;
 import javax.ws.rs.core.MediaType;
 import javax.ws.rs.core.Response;
 import java.util.List;
@@ -22,7 +24,7 @@ public interface GitLabApi {
 
     @GET
     @Path("groups/{id}/projects")
-    List<Project> getGroupProjects(@PathParam("id") int groupId, @QueryParam("simple") boolean simple, @QueryParam("order_by") String orderBy, @QueryParam("sort") String sort, @QueryParam("per_page") int pageSize) throws GitException;
+    List<Project> getGroupProjects(@PathParam("id") int groupId, @QueryParam("simple") boolean simple, @QueryParam("order_by") String orderBy, @QueryParam("sort") String sort, @QueryParam("per_page") int pageSize, @Context ResponseHttpHeaders responseHttpHeaders) throws GitException;
 
     @GET
     @Path("projects/{projectId}/repository/branches")
