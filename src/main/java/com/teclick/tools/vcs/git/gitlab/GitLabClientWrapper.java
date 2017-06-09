@@ -58,7 +58,7 @@ public class GitLabClientWrapper implements VCS {
                     VersionCommentItem versionCommentItem = new VersionCommentItem();
                     versionCommentItem.setVersion(commit.getId());
                     versionCommentItem.setComments(commit.getMessage());
-                    versionCommentItem.setCommittedDate(commit.getCreated_at());
+                    versionCommentItem.setCommittedDate(commit.getCommitted_date());
                     result.add(versionCommentItem);
                 }
             }
@@ -142,7 +142,7 @@ public class GitLabClientWrapper implements VCS {
             if ((null != commits) && (commits.size() > 0)) {
                 versionCommentItem.setVersion(commits.get(0).getId());
                 versionCommentItem.setComments(commits.get(0).getMessage());
-                versionCommentItem.setCommittedDate(commits.get(0).getCreated_at());
+                versionCommentItem.setCommittedDate(commits.get(0).getCommitted_date());
             }
             return versionCommentItem;
         } catch (GitException e) {
@@ -430,7 +430,7 @@ public class GitLabClientWrapper implements VCS {
 
     private String getCommitDate(Integer projectId, String targetVersion) throws GitException {
         Commit commitTargetBuild = gitLabApi.getCommits(projectId, targetVersion);
-        Date endDate = commitTargetBuild.getCreated_at();
+        Date endDate = commitTargetBuild.getCommitted_date();
         return formatDateTimeWithISO8601(endDate);
     }
 }
