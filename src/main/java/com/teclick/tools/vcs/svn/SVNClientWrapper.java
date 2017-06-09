@@ -79,11 +79,11 @@ public class SVNClientWrapper implements Closeable, VCS {
         return result;
     }
 
-    private long convertLongDefault(String longString) {
+    private long convertLongDefault(String longString, long defaultValue) {
         try {
             return Long.parseLong(longString);
         } catch (Exception e) {
-            return 0;
+            return defaultValue;
         }
     }
 
@@ -92,7 +92,7 @@ public class SVNClientWrapper implements Closeable, VCS {
 
         String projectSvnRoot = getProjectSvnRoot(project, branch);
 
-        final long lastBuildVersionId = convertLongDefault(lastBuildVersion);
+        final long lastBuildVersionId = convertLongDefault(lastBuildVersion, 0);
 
         final List<VersionCommentItem> result = new ArrayList<>();
         try {
