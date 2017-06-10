@@ -45,7 +45,7 @@ public abstract class GitClientBase<T> {
         jsonProvider.configure(DeserializationFeature.FAIL_ON_UNKNOWN_PROPERTIES, false);
         bean.setProvider(jsonProvider);
 
-        bean.getInInterceptors().add(new ResponseHttpHeadersInterceptor());
+        bean.getInInterceptors().add(new ResponseHeadersInterceptor());
 
         if (System.getProperty("debug", "").equals("true")) {
             bean.getInInterceptors().add(new LoggingInInterceptor());

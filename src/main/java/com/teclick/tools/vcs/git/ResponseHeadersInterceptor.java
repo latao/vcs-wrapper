@@ -9,11 +9,11 @@ import java.util.List;
 
 /**
  * Created by Nelson on 2017-06-09 21:43.
- * ResponseHttpHeadersInterceptor
+ * ResponseHeadersInterceptor
  */
-public class ResponseHttpHeadersInterceptor extends AbstractPhaseInterceptor<Message> {
+public class ResponseHeadersInterceptor extends AbstractPhaseInterceptor<Message> {
 
-    public ResponseHttpHeadersInterceptor() {
+    public ResponseHeadersInterceptor() {
         super(Phase.POST_INVOKE);
     }
 
@@ -22,8 +22,8 @@ public class ResponseHttpHeadersInterceptor extends AbstractPhaseInterceptor<Mes
         Message outMessage = message.getExchange().getOutMessage();
         List objectList = outMessage.get(List.class);
         for (Object obj : objectList) {
-            if (obj.getClass().isAssignableFrom(ResponseHttpHeaders.class)) {
-                ((ResponseHttpHeaders)obj).setHeaders(message);
+            if (obj.getClass().isAssignableFrom(ResponseHeaders.class)) {
+                ((ResponseHeaders)obj).setHeaders(message);
             }
         }
     }
