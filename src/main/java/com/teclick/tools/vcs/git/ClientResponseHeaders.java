@@ -8,9 +8,9 @@ import java.util.Map;
 
 /**
  * Created by Nelson on 2017-06-09 22:42.
- * ResponseHeaders
+ * ClientResponseHeaders
  */
-public class ResponseHeaders {
+public class ClientResponseHeaders {
 
     private Map<String, List<String>> headers;
 

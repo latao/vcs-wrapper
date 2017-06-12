@@ -1,6 +1,5 @@
 package com.teclick.tools.vcs.git.gitlab.entity;
 
-import com.fasterxml.jackson.databind.ObjectMapper;
 import org.apache.commons.io.FileUtils;
 
 import java.io.File;
@@ -24,11 +23,9 @@ public class ProjectFiles {
         this("master", commitMessage);
     }
 
-    public String buildContent(File folder) throws IOException {
+    public void loadProjectFiles(File folder) throws IOException {
         String basePath = folder.getCanonicalPath();
         lookupFiles(basePath, folder);
-        ObjectMapper mapper = new ObjectMapper();
-        return mapper.writeValueAsString(this);
     }
 
     private void lookupFiles(String basePath, File folder) throws IOException {

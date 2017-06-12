@@ -1,8 +1,10 @@
 package com.teclick.tools.vcs.git.gitlab;
 
 import com.teclick.tools.vcs.git.GitException;
-import com.teclick.tools.vcs.git.ResponseHeaders;
+import com.teclick.tools.vcs.git.ClientResponseHeaders;
 import com.teclick.tools.vcs.git.entity.*;
+import com.teclick.tools.vcs.git.gitlab.entity.GroupProjectParam;
+import com.teclick.tools.vcs.git.gitlab.entity.ProjectFiles;
 
 import javax.ws.rs.*;
 import javax.ws.rs.core.Context;
@@ -24,7 +26,7 @@ public interface GitLabApi {
 
     @GET
     @Path("groups/{id}/projects")
-    List<Project> getGroupProjects(@PathParam("id") int groupId, @QueryParam("simple") boolean simple, @QueryParam("order_by") String orderBy, @QueryParam("sort") String sort, @QueryParam("per_page") int pageSize, @Context ResponseHeaders responseHeaders) throws GitException;
+    List<Project> getGroupProjects(@PathParam("id") int groupId, @BeanParam GroupProjectParam groupProjectParam, @Context ClientResponseHeaders clientResponseHeaders) throws GitException;
 
     @GET
     @Path("projects/{projectId}/repository/branches")
@@ -113,6 +115,6 @@ public interface GitLabApi {
 
     @POST
     @Path("projects/{id}/repository/commits")
-    void commitFiles(@PathParam("id") int projectId, String content);
+    void commitFiles(@PathParam("id") int projectId, ProjectFiles projectFiles);
 
 }

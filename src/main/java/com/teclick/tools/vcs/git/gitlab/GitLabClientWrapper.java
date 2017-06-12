@@ -1,9 +1,10 @@
 package com.teclick.tools.vcs.git.gitlab;
 
 import com.teclick.tools.vcs.*;
+import com.teclick.tools.vcs.git.ClientResponseHeaders;
 import com.teclick.tools.vcs.git.GitException;
-import com.teclick.tools.vcs.git.ResponseHeaders;
 import com.teclick.tools.vcs.git.entity.*;
+import com.teclick.tools.vcs.git.gitlab.entity.GroupProjectParam;
 import com.teclick.tools.vcs.git.gitlab.entity.ProjectFiles;
 import com.teclick.tools.vcs.utils.Zip;
 
@@ -43,10 +44,6 @@ public class GitLabClientWrapper implements VCS {
         try {
             Integer projectId = Integer.parseInt(project);
 
-            //Date endDate = new Date();
-            //endDate.setTime(endDate.getTime() + 1000 * 60 * 10);
-            //String strEndDate = formatDateTimeWithISO8601(endDate);
-
             String strBeginDate = null;
             if ((null != lastBuildVersion) && (!lastBuildVersion.trim().equals(""))) {
                 strBeginDate = getCommitDate(projectId, lastBuildVersion);
@@ -76,8 +73,13 @@ public class GitLabClientWrapper implements VCS {
             List<ProjectItem> result = new ArrayList<>();
             Group group = getGroup(groupName);
             if (null != group) {
-                ResponseHeaders responseHeaders = new ResponseHeaders();
-                List<Project> projects = gitLabApi.getGroupProjects(group.getId(), true, "name", "asc", 100, responseHeaders);
+                GroupProjectParam gpp = new GroupProjectParam();
+                gpp.setSimple(true);
+                gpp.setPageSize(100);
+                gpp.setOrderBy("name");
+                gpp.setSort("asc");
+                ClientResponseHeaders clientResponseHeaders = new ClientResponseHeaders();
+                List<Project> projects = gitLabApi.getGroupProjects(group.getId(), gpp, clientResponseHeaders);
                 if (null != projects) {
                     for (Project project : projects) {
                         ProjectItem item = new ProjectItem();
@@ -183,9 +185,9 @@ public class GitLabClientWrapper implements VCS {
                 Project project = gitLabApi.addProject(projectName, namespace.getId(), "Project Initialize", false, sudoId);
                 ProjectFiles projectFiles = new ProjectFiles("Project Initialize");
                 try {
-                    String filesContent = projectFiles.buildContent(folder);
+                    projectFiles.loadProjectFiles(folder);
                     // 导入文件
-                    gitLabApi.commitFiles(project.getId(), filesContent);
+                    gitLabApi.commitFiles(project.getId(), projectFiles);
                 } catch (IOException e) {
                     throw new GitException("Upload project files", e);
                 }
@@ -410,7 +412,11 @@ public class GitLabClientWrapper implements VCS {
                 throw new GitException("Can not lookup target group: " + groupTarget);
             }
 
-            List<Project> projects = gitLabApi.getGroupProjects(source.getId(), true, null, null, 100, null);
+            GroupProjectParam gpp = new GroupProjectParam();
+            gpp.setSimple(true);
+            gpp.setPageSize(100);
+            ClientResponseHeaders clientResponseHeaders = new ClientResponseHeaders();
+            List<Project> projects = gitLabApi.getGroupProjects(source.getId(), gpp, clientResponseHeaders);
             if (null != projects) {
                 for (Project prj : projects) {
                     gitLabApi.transferProjectToGroup(target.getId(), prj.getId());
