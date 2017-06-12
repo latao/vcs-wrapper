@@ -46,7 +46,7 @@ public interface VCS {
      * @param version 下载的版本
      * @throws VCSException 当发生异常统一转换成成这个异常
      */
-    void checkout(File Folder, String project, String branch, String version) throws VCSException;
+    String checkout(File Folder, String project, String branch, String version) throws VCSException;
 
     /**
      * 通过这个方法判断是否要自动升级版本号

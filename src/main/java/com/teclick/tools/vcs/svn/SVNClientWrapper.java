@@ -36,15 +36,18 @@ public class SVNClientWrapper implements Closeable, VCS {
     }
 
     @Override
-    public void checkout(File Folder, String project, String branch, String version) throws VCSException {
+    public String checkout(File Folder, String project, String branch, String version) throws VCSException {
 
         String projectSvnRoot = getProjectSvnRoot(project, branch);
+
         try {
             SVNURL svnurl = SVNURL.parseURIEncoded(projectSvnRoot);
             svnClientManager.getUpdateClient().doCheckout(svnurl, Folder, SVNRevision.HEAD, SVNRevision.create(Long.parseLong(version)), SVNDepth.fromRecurse(true), false);
         } catch (SVNException e) {
             throw new VCSException("Get code from SVN: " + projectSvnRoot, e);
         }
+
+        return projectSvnRoot;
     }
 
     @Override

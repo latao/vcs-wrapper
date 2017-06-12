@@ -110,7 +110,7 @@ public class GitLabClientWrapper implements VCS {
     }
 
     @Override
-    public void checkout(File folder, String project, String branch, String version) throws VCSException {
+    public String checkout(File folder, String project, String branch, String version) throws VCSException {
         Response response = null;
         try {
             Integer projectId = Integer.parseInt(project);
@@ -119,6 +119,8 @@ public class GitLabClientWrapper implements VCS {
                 Zip.unzip(in, folder, false);
                 response.close();
             }
+
+            return gitLabApi.getProjectInfo(projectId).getHttpUrlToRepo();
         } catch (GitException | IOException e) {
             if (null != response) {
                 response.close();

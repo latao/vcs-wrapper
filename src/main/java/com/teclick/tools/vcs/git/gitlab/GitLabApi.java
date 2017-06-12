@@ -21,6 +21,10 @@ import java.util.List;
 public interface GitLabApi {
 
     @GET
+    @Path("projects/{id}")
+    Project getProjectInfo(@PathParam("id") int id);
+
+    @GET
     @Path("projects")
     List<Project> getProjects(@QueryParam("search") String projectName, @QueryParam("simple") boolean simple) throws GitException;
 

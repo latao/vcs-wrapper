@@ -1,5 +1,7 @@
 package com.teclick.tools.vcs.git.entity;
 
+import com.fasterxml.jackson.annotation.JsonProperty;
+
 import java.util.Date;
 import java.util.List;
 
@@ -16,11 +18,17 @@ public class Project {
     private Boolean containerRegistryEnabled;
     private Date createdAt;
     private Integer creatorId;
+
+    @JsonProperty("default_branch")
     private String defaultBranch;
+
     private String description;
     private Integer forksCount;
     private Project forkedFromProject;
+
+    @JsonProperty("http_url_to_repo")
     private String httpUrlToRepo;
+
     private Integer id;
     private Boolean isPublic;
     private Boolean issuesEnabled;
@@ -45,13 +53,19 @@ public class Project {
     private Boolean sharedRunnersEnabled;
     //    private List<ProjectSharedGroup> sharedWithGroups;
     private Boolean snippetsEnabled;
+
+    @JsonProperty("ssh_url_to_repo")
     private String sshUrlToRepo;
+
     private Integer starCount;
     private List<String> tagList;
     private Integer visibilityLevel;
     //    private Visibility visibility;
     private Boolean wallEnabled;
+
+    @JsonProperty("web_url")
     private String webUrl;
+
     private Boolean wikiEnabled;
 
     public Integer getApprovalsBeforeMerge() {

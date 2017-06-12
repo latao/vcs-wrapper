@@ -21,9 +21,11 @@ public class ClientResponseHeadersInterceptor extends AbstractPhaseInterceptor<M
     public void handleMessage(Message message) throws Fault {
         Message outMessage = message.getExchange().getOutMessage();
         List objectList = outMessage.get(List.class);
-        for (Object obj : objectList) {
-            if (obj.getClass().isAssignableFrom(ClientResponseHeaders.class)) {
-                ((ClientResponseHeaders)obj).setHeaders(message);
+        if (null != objectList) {
+            for (Object obj : objectList) {
+                if ((null != obj) && (obj.getClass().isAssignableFrom(ClientResponseHeaders.class))) {
+                    ((ClientResponseHeaders) obj).setHeaders(message);
+                }
             }
         }
     }

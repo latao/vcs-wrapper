@@ -46,8 +46,8 @@ public class BitBucketClientWrapper implements VCS {
     }
 
     @Override
-    public void checkout(File Folder, String project, String branch, String version) throws VCSException {
-
+    public String checkout(File Folder, String project, String branch, String version) throws VCSException {
+        return null;
     }
 
     @Override
