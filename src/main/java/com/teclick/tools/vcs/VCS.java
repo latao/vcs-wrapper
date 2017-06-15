@@ -104,6 +104,15 @@ public interface VCS {
     void delGroup(String name) throws VCSException;
 
     /**
+     * change group name path
+     * @param groupName group name
+     * @param newGroupName new group name
+     * @param newPath new group path
+     * @param sudoUser sudo user
+     */
+    void setGroup(String groupName, String newGroupName, String newPath, String sudoUser) throws VCSException;
+
+    /**
      * @param name group name
      */
     boolean groupExists(String name) throws VCSException;

@@ -266,6 +266,20 @@ public class GitLabClientWrapper implements VCS {
     }
 
     @Override
+    public void setGroup(String groupName, String newGroupName, String newPath, String sudoUser) throws VCSException {
+        try {
+            Group group = getGroup(groupName);
+            if (null != group) {
+                gitLabApi.setGroup(group.getId(), newGroupName, newPath);
+            } else {
+                throw new GitException("Group name [" + groupName + "] not found");
+            }
+        } catch (Exception e) {
+            throw new VCSException("delGroup", e);
+        }
+    }
+
+    @Override
     public boolean groupExists(String name) {
         return getGroup(name) != null;
     }

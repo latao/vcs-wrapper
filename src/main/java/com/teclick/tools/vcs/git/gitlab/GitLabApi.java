@@ -1,7 +1,7 @@
 package com.teclick.tools.vcs.git.gitlab;
 
-import com.teclick.tools.vcs.git.GitException;
 import com.teclick.tools.vcs.git.ClientResponseHeaders;
+import com.teclick.tools.vcs.git.GitException;
 import com.teclick.tools.vcs.git.entity.*;
 import com.teclick.tools.vcs.git.gitlab.entity.GroupProjectParam;
 import com.teclick.tools.vcs.git.gitlab.entity.ProjectFiles;
@@ -111,7 +111,7 @@ public interface GitLabApi {
 
     @PUT
     @Path("groups/{id}")
-    void setGroup(@PathParam("id") int groupId, @QueryParam("name") String name, @QueryParam("path") String path, @QueryParam("description") String description);
+    void setGroup(@PathParam("id") int groupId, @QueryParam("name") String name, @QueryParam("path") String path);
 
     @POST
     @Path("groups/{id}/projects/{project_id}")

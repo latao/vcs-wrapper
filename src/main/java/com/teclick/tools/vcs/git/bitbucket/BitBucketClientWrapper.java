@@ -79,6 +79,11 @@ public class BitBucketClientWrapper implements VCS {
     }
 
     @Override
+    public void setGroup(String groupName, String newGroupName, String newPath, String sudoUser) throws VCSException {
+
+    }
+
+    @Override
     public boolean groupExists(String name) {
         return null != getGroup(name);
     }
