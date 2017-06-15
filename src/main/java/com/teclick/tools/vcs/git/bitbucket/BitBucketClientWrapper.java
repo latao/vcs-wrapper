@@ -71,7 +71,7 @@ public class BitBucketClientWrapper implements VCS {
     }
 
     @Override
-    public void addGroup(String name, String description, String sudoUser) {
+    public void addGroup(String name, String path, String description, String sudoUser) {
     }
 
     @Override

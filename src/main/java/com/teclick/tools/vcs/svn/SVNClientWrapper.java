@@ -62,7 +62,7 @@ public class SVNClientWrapper implements Closeable, VCS {
 
             repository.log(
                     new String[]{},
-                    Long.parseLong(lastBuildVersion), -1,
+                    stringToLongDefault(lastBuildVersion, 0), -1,
                     false, false,
                     new ISVNLogEntryHandler() {
                         @Override
@@ -82,7 +82,7 @@ public class SVNClientWrapper implements Closeable, VCS {
         return result;
     }
 
-    private long convertLongDefault(String longString, long defaultValue) {
+    private long stringToLongDefault(String longString, long defaultValue) {
         try {
             return Long.parseLong(longString);
         } catch (Exception e) {
@@ -95,7 +95,7 @@ public class SVNClientWrapper implements Closeable, VCS {
 
         String projectSvnRoot = getProjectSvnRoot(project, branch);
 
-        final long lastBuildVersionId = convertLongDefault(lastBuildVersion, 0);
+        final long lastBuildVersionId = stringToLongDefault(lastBuildVersion, 0);
 
         final List<VersionCommentItem> result = new ArrayList<>();
         try {
@@ -228,7 +228,7 @@ public class SVNClientWrapper implements Closeable, VCS {
     }
 
     @Override
-    public void addGroup(String name, String description, String sudoUser) {
+    public void addGroup(String name, String path, String description, String sudoUser) {
     }
 
     @Override

@@ -238,11 +238,11 @@ public class GitLabClientWrapper implements VCS {
     }
 
     @Override
-    public void addGroup(String name, String description, String sudoUser) throws VCSException {
+    public void addGroup(String name, String path, String description, String sudoUser) throws VCSException {
         try {
             Group group = getGroup(name);
             if (null == group) {
-                gitLabApi.addGroup(name, name, description, sudoUser);
+                gitLabApi.addGroup(name, path, description, sudoUser);
             } else {
                 throw new GitException("Group name [" + name + "] already exists");
             }

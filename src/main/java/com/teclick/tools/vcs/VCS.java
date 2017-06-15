@@ -94,7 +94,7 @@ public interface VCS {
      * @param name        组名
      * @param description 该组的描述
      */
-    void addGroup(String name, String description, String sudoUser) throws VCSException;
+    void addGroup(String name, String path, String description, String sudoUser) throws VCSException;
 
     /**
      * delete group
