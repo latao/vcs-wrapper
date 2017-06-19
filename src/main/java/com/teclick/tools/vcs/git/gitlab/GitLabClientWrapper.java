@@ -217,7 +217,7 @@ public class GitLabClientWrapper implements VCS {
         User result = null;
         List<User> users = gitLabApi.getUsers(account);
         for (User user : users) {
-            if (user.getUsername().equals(account)) {
+            if (account.equals(user.getUsername())) {
                 result = user;
                 break;
             }
@@ -226,10 +226,10 @@ public class GitLabClientWrapper implements VCS {
     }
 
     private Group getGroup(String groupName) {
-        List<Group> groups = gitLabApi.getGroups(groupName);
         Group result = null;
+        List<Group> groups = gitLabApi.getGroups(groupName);
         for (Group group : groups) {
-            if (group.getName().toLowerCase().equals(groupName.toLowerCase())) {
+            if (groupName.equals(group.getName())) {
                 result = group;
                 break;
             }
